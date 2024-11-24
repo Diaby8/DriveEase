@@ -1,9 +1,13 @@
+# System files
 .DS_Store
+
+# Node.js dependencies
 node_modules
+
+# Build output
 /dist
 
-
-# local env files
+# Environment files
 .env.local
 .env.*.local
 
@@ -13,7 +17,7 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-# Editor directories and files
+# Editor-specific files
 .idea
 .vscode
 *.suo
@@ -21,3 +25,11 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
+
+# Cache files
+.eslintcache
+/.cache
+
+# Optional: lock files (if your team agrees)
+# package-lock.json
+# yarn.lock
