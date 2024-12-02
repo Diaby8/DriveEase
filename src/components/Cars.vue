@@ -1,18 +1,18 @@
 <template>
-    <section class="cars">
-      <div class="container">
-        <h2>Our Cars</h2>
-        <div class="car-list">
-          <div class="car" v-for="(car, index) in cars" :key="index">
-            <img :src="car.image" :alt="car.name">
-            <h3>{{ car.name }}</h3>
-            <p>{{ car.description }}</p>
-            <button>Book Now</button>
-          </div>
+  <section class="cars">
+    <div class="container">
+      <h2>Our Cars</h2>
+      <div class="car-list">
+        <div class="car" v-for="(car, index) in cars" :key="index">
+          <img :src="car.image" :alt="car.name" />
+          <h3>{{ car.name }}</h3>
+          <p>{{ car.description }}</p>
+          <button>Book Now</button>
         </div>
       </div>
-    </section>
-  </template>
+    </div>
+  </section>
+</template>
 
 <script>
 export default {
@@ -41,23 +41,23 @@ export default {
 }
 </script>
 
-  <style scoped>
-  .cars .car-list {
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
-    margin-top: 2em;
-  }
-  .cars .car {
-    width: 30%;
-    background: rgba(255, 255, 255, 0.1);
-    padding: 15px;
-    border-radius: 10px;
-    text-align: center;
-    margin: 10px;
-  }
-  .cars .car img {
-    max-width: 100%;
-    border-radius: 5px;
-  }
-  </style>
+<style scoped>
+.cars .car-list {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  margin-top: 2em;
+}
+.cars .car {
+  width: 30%;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 15px;
+  border-radius: 10px;
+  text-align: center;
+  margin: 10px;
+}
+.cars .car img {
+  max-width: 100%;
+  border-radius: 5px;
+}
+</style>

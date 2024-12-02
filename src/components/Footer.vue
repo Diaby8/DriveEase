@@ -1,10 +1,10 @@
 <template>
-    <footer>
-      <div class="container">
-        <p>&copy; 2024 DriveEase. All rights reserved. | Privacy Policy | Terms of Service</p>
-      </div>
-    </footer>
-  </template>
+  <footer>
+    <div class="container">
+      <p>&copy; 2024 DriveEase. All rights reserved. | Privacy Policy | Terms of Service</p>
+    </div>
+  </footer>
+</template>
 
 <script>
 export default {
@@ -12,12 +12,12 @@ export default {
 }
 </script>
 
-  <style scoped>
-  footer {
-    background: #000;
-    color: #fff;
-    text-align: center;
-    padding: 1em 0;
-    margin-top: 2em;
-  }
-  </style>
+<style scoped>
+footer {
+  background: #000;
+  color: #fff;
+  text-align: center;
+  padding: 1em 0;
+  margin-top: 2em;
+}
+</style>
