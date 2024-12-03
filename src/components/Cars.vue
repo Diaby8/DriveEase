@@ -1,10 +1,18 @@
 <template>
   <section class="cars">
     <div class="container">
-      <h2>Our Cars</h2>
-      <div class="car-list">
-        <div class="car" v-for="(car, index) in cars" :key="index">
+      <div
+        class="car-section"
+        :class="{ reverse: index % 2 !== 0 }"
+        v-for="(car, index) in cars"
+        :key="index"
+      >
+        <!-- Image -->
+        <div class="car-image">
           <img :src="car.image" :alt="car.name" />
+        </div>
+        <!-- Description -->
+        <div class="car-description">
           <h3>{{ car.name }}</h3>
           <p>{{ car.description }}</p>
           <button>Book Now</button>
@@ -21,19 +29,14 @@ export default {
     return {
       cars: [
         {
-          name: 'Economy',
+          name: 'Standard',
           description: 'Perfect for city driving. Compact and fuel-efficient.',
           image: require('../assets/car1.jpg')
         },
         {
-          name: 'SUV',
-          description: 'Spacious and powerful, ideal for family trips.',
-          image: require('../assets/car2.jpg')
-        },
-        {
           name: 'Luxury',
           description: 'Travel in style with premium comfort and features.',
-          image: require('../assets/car3.jpg')
+          image: require('../assets/car2.jpg')
         }
       ]
     }
@@ -42,40 +45,78 @@ export default {
 </script>
 
 <style scoped>
-.cars .car-list {
+.cars {
+  padding: 50px 0;
+}
+
+.cars .car-section {
   display: flex;
-  justify-content: space-around;
-  flex-wrap: wrap;
-  margin-top: 2em;
-}
-
-.cars .car {
-  width: 30%;
-  background: rgba(255, 255, 255, 0.1);
-  padding: 15px;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 50px;
+  padding: 20px;
   border-radius: 10px;
-  text-align: center;
-  margin: 10px;
-}
-@media (max-width: 768px){
-  .cars .car{
-    width: 80%;
-  }
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-@media (max-width: 768px){
-  .cars .car-list {
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: column;
-    margin-top: 2em;
-    align-items: center;
-    width: 80%;
-    margin: 10px auto;
-  }
+/* Apply reverse layout */
+.cars .car-section.reverse {
+  flex-direction: row-reverse;
 }
-.cars .car img {
+
+.cars .car-image {
+  flex: 1;
+  text-align: center;
+}
+
+.cars .car-image img {
   max-width: 100%;
+  border-radius: 10px;
+}
+
+.cars .car-description {
+  flex: 1;
+  padding: 20px;
+  text-align: left;
+  color: white;
+}
+
+.cars .car-description h3 {
+  font-size: 2em;
+  margin-bottom: 10px;
+}
+
+.cars .car-description p {
+  font-size: 1.2em;
+  margin-bottom: 20px;
+}
+
+.cars .car-description button {
+  padding: 10px 20px;
+  background-color: #ff9800;
+  color: white;
+  border: none;
   border-radius: 5px;
+  cursor: pointer;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.cars .car-description button:hover {
+  transform: scale(1.1);
+  background-color: #e68a00;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .cars .car-section {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .cars .car-description {
+    text-align: center;
+    padding: 10px;
+  }
 }
 </style>
