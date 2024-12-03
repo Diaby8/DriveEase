@@ -48,6 +48,7 @@ export default {
   flex-wrap: wrap;
   margin-top: 2em;
 }
+
 .cars .car {
   width: 30%;
   background: rgba(255, 255, 255, 0.1);
@@ -55,6 +56,23 @@ export default {
   border-radius: 10px;
   text-align: center;
   margin: 10px;
+}
+@media (max-width: 768px){
+  .cars .car{
+    width: 80%;
+  }
+}
+
+@media (max-width: 768px){
+  .cars .car-list {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    margin-top: 2em;
+    align-items: center;
+    width: 80%;
+    margin: 10px auto;
+  }
 }
 .cars .car img {
   max-width: 100%;
