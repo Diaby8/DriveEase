@@ -40,7 +40,9 @@ Pour changer de tâche ou démarrer une nouvelle fonctionnalité :
     git pull origin main
     git checkout -b nouvelle-branche
 
-    Pour fusionner dans main :
 
+    Pour fusionner dans main :
 Ouvre une Pull Request via  le site GitHub.
 Attend la validation et la fusion.
+
+MERCI L'EQUIPE
