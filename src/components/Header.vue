@@ -41,5 +41,14 @@ header nav ul li a {
   color: #fff;
   text-decoration: none;
   font-weight: bold;
+  transition: 0.5s;
 }
+li a:hover{
+  background-color: #fff;
+  border-radius: 30px;
+  padding: 7px;
+  color: black;
+  transform: scale(1.4);
+}
+
 </style>

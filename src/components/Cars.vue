@@ -56,11 +56,15 @@ export default {
   border-radius: 10px;
   text-align: center;
   margin: 10px;
+  transition: 0.6s ease;
 }
 @media (max-width: 768px){
   .cars .car{
     width: 80%;
   }
+}
+.car:hover{
+  transform: scale(1.2)
 }
 
 @media (max-width: 768px){
@@ -77,5 +81,16 @@ export default {
 .cars .car img {
   max-width: 100%;
   border-radius: 5px;
+}
+button{
+  background-color: beige;
+  border-radius: 30px;
+  border: none;
+  transition: 0.5s ease;
+  padding: 5px;
+}
+button:hover{
+  background-color:rgb(255, 255, 255) ;
+  transform: scale(1.2);
 }
 </style>

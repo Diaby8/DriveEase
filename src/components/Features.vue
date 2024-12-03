@@ -32,11 +32,37 @@ export default {
   justify-content: space-around;
   margin-top: 2em;
 }
+
+@media (max-width: 768px){
+  .features .feature-list {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 2em;
+    flex-direction: column;
+    align-items: center;
+  }
+
+}
+
 .features .feature {
   width: 30%;
   background: rgba(255, 255, 255, 0.1);
   padding: 15px;
   border-radius: 10px;
   text-align: left;
+  transition: 0.5s ease;
+}
+@media (max-width: 768px){
+  .features .feature {
+    width: 80%;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 10px;
+    text-align: left;
+    margin-bottom: 30px;
+  }
+}
+.feature:hover {
+  transform: scale(1.2);
 }
 </style>
