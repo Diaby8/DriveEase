@@ -45,4 +45,13 @@ Pour changer de tâche ou démarrer une nouvelle fonctionnalité :
 Ouvre une Pull Request via  le site GitHub.
 Attend la validation et la fusion.
 
+Mettre à jour les références distantes :
+    git fetch origin
+Lister les branches distantes (optionnel) :
+    git branch -r
+Basculer par exemple sur la branche testv :
+    git checkout testv
+Synchroniser la branche avec le dépôt distant :
+    git pull origin testv
+
 MERCI L'EQUIPE
