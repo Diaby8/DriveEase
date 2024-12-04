@@ -1,5 +1,5 @@
 <template>
-  <section class="cars">
+  <section id="cars-section" class="cars">
     <div class="container">
       <div class="car-list">
         <div class="car" v-for="(car, index) in cars" :key="index">
@@ -17,7 +17,7 @@
 
 <script>
 export default {
-  name: 'CarsList',
+  name: 'CarsType',
   data () {
     return {
       cars: [
