@@ -29,6 +29,7 @@ export default {
           name: 'SUV',
           description: 'Spacious and powerful, ideal for family trips.',
           image: require('../assets/car2.jpg')
+
         },
         {
           name: 'Luxury',
