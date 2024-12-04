@@ -3,10 +3,12 @@
     <div class="container">
       <div class="car-list">
         <div class="car" v-for="(car, index) in cars" :key="index">
-          <img :src="car.image" :alt="car.name" />
+          <div class="image-wrapper">
+            <img :src="car.image" :alt="car.name" />
+          </div>
           <h3>{{ car.name }}</h3>
           <p>{{ car.description }}</p>
-          <button>Book Now</button>
+          <button class="book-now-button">Book Now</button>
         </div>
       </div>
     </div>
@@ -36,40 +38,44 @@ export default {
 </script>
 
 <style scoped>
+/* Conteneur pour les voitures */
 .cars .car-list {
   display: flex;
-  justify-content: space-between; /* Alignement serré */
-  gap: 10px; /* Ajout d'un léger espacement entre les cartes */
+  justify-content: space-between;
+  gap: 20px;
   flex-wrap: wrap;
   margin-top: 2em;
 }
 
+/* Carte individuelle */
 .cars .car {
-  width: 48%; /* Ajustement de la largeur pour coller les cartes */
+  width: 48%; /* S'assure que chaque carte occupe la moitié de la largeur */
   background: rgba(255, 255, 255, 0.1);
   padding: 15px;
   border-radius: 10px;
   text-align: center;
-  margin: 0; /* Suppression des marges verticales */
-  transition: transform 0.4s ease; /* Effet de zoom */
+  transition: transform 0.4s ease;
 }
 
 .cars .car:hover {
   transform: scale(1.05); /* Zoom sur la carte au survol */
 }
 
-.cars .car img {
-  max-width: 100%;
-  height: auto;
-  aspect-ratio: 16/9; /* Uniformise le ratio des images */
+/* Wrapper pour garder la taille uniforme */
+.image-wrapper {
+  width: 100%;
+  aspect-ratio: 16/9; /* Maintient un ratio uniforme pour toutes les images */
+  overflow: hidden;
   border-radius: 10px;
-  transition: transform 0.4s ease; /* Effet de zoom sur l'image */
 }
 
-.cars .car img:hover {
-  transform: scale(1.1); /* Zoom sur l'image au survol */
+.image-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Remplit le conteneur tout en respectant les proportions */
 }
 
+/* Titre et description */
 .cars .car h3 {
   font-size: 1.5rem;
   margin: 0.5em 0;
@@ -80,28 +86,31 @@ export default {
   margin: 0.5em 0 1em;
 }
 
-button {
-  background-color: beige;
+/* Style du bouton Book Now */
+.book-now-button {
+  background-color: transparent;
+  font-family: 'Oswald', sans-serif;
   border-radius: 20px;
-  border: none;
-  transition: transform 0.3s ease, background-color 0.3s ease;
-  padding: 10px;
+  border: 2px solid white;
+  color: white;
+  padding: 10px 20px;
   font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
-button:hover {
-  background-color: rgb(255, 255, 255);
+/* Effets au survol */
+.book-now-button:hover {
+  background-color: white;
+  color: black;
   transform: scale(1.1);
 }
 
+/* Styles pour les écrans mobiles */
 @media (max-width: 768px) {
   .cars .car {
-    width: 100%; /* Les cartes prennent toute la largeur sur mobile */
+    width: 100%; /* Une carte par ligne sur les petits écrans */
     margin-bottom: 20px;
-  }
-
-  .cars .car img {
-    aspect-ratio: unset; /* Supprime le ratio sur mobile */
   }
 }
 </style>
