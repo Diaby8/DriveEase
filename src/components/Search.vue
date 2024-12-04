@@ -54,8 +54,9 @@ export default {
 }
 
 .search form button {
+
   font-family: 'Oswald', sans-serif;
-  background-color: #767079;
+  background-color: #434548;
   color: white;
   border: none;
   cursor: pointer;
