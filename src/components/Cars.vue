@@ -82,6 +82,7 @@ export default {
 
 button {
   background-color: beige;
+  font-family: 'Oswald', sans-serif;
   border-radius: 20px;
   border: none;
   transition: transform 0.3s ease, background-color 0.3s ease;
