@@ -57,3 +57,5 @@ app.get('/api/cars/standard', (req, res) => {
 app.listen(5000, () => {
   console.log('Serveur lancé sur http://localhost:5000')
 })
+
+console.log(this.filteredCars);
