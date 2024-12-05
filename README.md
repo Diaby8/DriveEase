@@ -60,8 +60,10 @@ Synchroniser la branche avec le dépôt distant :
 
 
 AVANT de Run pour la premiere fois (npm run serve):
-Démarrer le serveur Node.js :
-    node server.js
+    npm install axios --legacy-peer-deps
+
+    Démarrer le serveur Node.js :
+        node server.js
 
 IMPORTANT: renommez le fichier "env.example" par ".env" et dedans mettez votre propre mot de passe mySQL a la ligne password". Pensez aussi a ouvrir le fichier "database.sql" sur mysql
 
