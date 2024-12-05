@@ -64,8 +64,9 @@ AVANT de Run pour la premiere fois (npm run serve):
 
     Démarrer le serveur Node.js :
         node server.js et ouvrir un nouveau terminal!!
+    MTN vous pouvez lancer.
 
-IMPORTANT: renommez le fichier "env.example" par ".env" et dedans mettez votre propre mot de passe mySQL a la ligne password. Pensez aussi a ouvrir le fichier "database.sql" sur mysql
+IMPORTANT: renommez le fichier "env.example" EXACTEMENT par ".env" et dedans mettez votre propre mot de passe mySQL a la ligne password. Pensez aussi a ouvrir le fichier "database.sql" sur mysql
 
 
 
