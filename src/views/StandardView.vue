@@ -10,13 +10,12 @@
 
       <!-- Section de filtrage -->
       <div class="filters">
-        <label for="fuel">Filter by Fuel:</label>
-        <select id="fuel" v-model="selectedFuel">
+        <label for="location">Filter by Location:</label>
+        <select id="location" v-model.number="selectedLocation">
           <option value="">All</option>
-          <option value="PETROL">Petrol</option>
-          <option value="DIESEL">Diesel</option>
-          <option value="ELECTRIC">Electric</option>
-          <option value="HYBRID">Hybrid</option>
+          <option value="1">Paris</option>
+          <option value="2">Marseille</option>
+          <option value="3">Lyon</option>
         </select>
 
         <label for="price">Max Price ($/day):</label>
@@ -52,7 +51,7 @@ export default {
   data () {
     return {
       cars: [], // Toutes les voitures récupérées depuis l'API
-      selectedFuel: '', // Type de carburant sélectionné
+      selectedLocation: '', // Type de carburant sélectionné
       maxPrice: 0 // Prix maximum
     }
   },
@@ -60,14 +59,14 @@ export default {
     filteredCars () {
       return this.cars.filter((car) => {
         // Filtre par carburant
-        const matchesFuel =
-            this.selectedFuel === '' || car.FUEL === this.selectedFuel
+        const matchesLocation =
+            this.selectedLocation === '' || car.CURRENT_LOCATION === parseInt(this.selectedLocation, 10)
 
         // Filtre par prix
         const matchesPrice =
             this.maxPrice === 0 || car.PRICE_DAY <= this.maxPrice
 
-        return matchesFuel && matchesPrice
+        return matchesLocation && matchesPrice
       })
     },
     groupedCars () {
