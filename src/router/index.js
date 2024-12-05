@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import AboutView from '../views/AboutView.vue'
+import LuxuryView from '../views/LuxuryView.vue'
+import StandardView from '../views/StandardView.vue'
 
 const routes = [
   {
@@ -12,12 +14,26 @@ const routes = [
     path: '/about',
     name: 'about',
     component: AboutView
+  },
+  {
+    path: '/luxury',
+    name: 'luxury',
+    component: LuxuryView
+  },
+  {
+    path: '/standard',
+    name: 'standard',
+    component: StandardView
   }
 ]
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
-  routes
+  routes,
+  scrollBehavior (to, from, savedPosition) {
+    // Force le défilement en haut à chaque navigation
+    return { top: 0 }
+  }
 })
 
 export default router

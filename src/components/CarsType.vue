@@ -8,7 +8,12 @@
           </div>
           <h3>{{ car.name }}</h3>
           <p>{{ car.description }}</p>
-          <button class="book-now-button">Book Now</button>
+          <button
+            class="book-now-button"
+            @click="redirectToPage(car.name.toLowerCase())"
+          >
+            Book Now
+          </button>
         </div>
       </div>
     </div>
@@ -32,6 +37,12 @@ export default {
           image: require('../assets/luxuryCars.jpg')
         }
       ]
+    }
+  },
+  methods: {
+    redirectToPage (type) {
+      // Redirige vers la page appropriée (luxury ou standard)
+      this.$router.push(`/${type}`)
     }
   }
 }

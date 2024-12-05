@@ -23,7 +23,7 @@ npm run lint
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
-Avant de commencer une tâche :
+Avant de commencer une tâche(branche) :
 bash
     git checkout main
     git pull origin main
@@ -41,17 +41,30 @@ Pour changer de tâche ou démarrer une nouvelle fonctionnalité :
     git checkout -b nouvelle-branche
 
 
-    Pour fusionner dans main :
-Ouvre une Pull Request via  le site GitHub.
-Attend la validation et la fusion.
+Pour fusionner dans main :
+    Ouvre une Pull Request via  le site GitHub.
+    Attend la validation et la fusion.
 
 Mettre à jour les références distantes :
     git fetch origin
+
 Lister les branches distantes (optionnel) :
     git branch -r
+
 Basculer par exemple sur la branche testv :
     git checkout testv
+
 Synchroniser la branche avec le dépôt distant :
     git pull origin testv
+
+
+
+AVANT de Run pour la premiere fois (npm run serve):
+Démarrer le serveur Node.js :
+    node server.js
+
+IMPORTANT: renommez le fichier "env.example" par ".env" et dedans mettez votre propre mot de passe mySQL a la ligne password". Pensez aussi a ouvrir le fichier "database.sql" sur mysql
+
+
 
 MERCI L'EQUIPE
