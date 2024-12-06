@@ -1,7 +1,6 @@
 const express = require('express')
 const mysql = require('mysql2')
 const cors = require('cors')
-const bcrypt = require('bcrypt') // Pour sécuriser les mots de passe
 require('dotenv').config()
 
 const app = express()
