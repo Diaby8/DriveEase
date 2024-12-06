@@ -6,7 +6,7 @@
         <h4>Navigation</h4>
         <ul>
           <li @click="navigateTo('/')">Home</li>
-          <li @click="navigateTo('/cars')">Available Cars</li>
+          <li @click="navigateTo('/standard')">Available Cars</li>
           <li @click="navigateTo('/about')">About Us</li>
         </ul>
       </div>
@@ -28,6 +28,14 @@
           <li>Email: support@carrental.com</li>
           <li>Phone: +1 800 555 1234</li>
           <li>Address: 123 Car Rental Blvd, Paris</li>
+        </ul>
+      </div>
+
+      <!-- Section 4: Admin -->
+      <div class="footer-column">
+        <h4>Admin</h4>
+        <ul>
+          <li @click="navigateTo('/admin-login')">Admin Login</li>
         </ul>
       </div>
 

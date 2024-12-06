@@ -1,6 +1,7 @@
 const express = require('express')
 const mysql = require('mysql2')
 const cors = require('cors')
+const bcrypt = require('bcrypt') // Pour sécuriser les mots de passe
 require('dotenv').config()
 
 const app = express()
@@ -32,7 +33,6 @@ app.get('/api/cars/luxury', (req, res) => {
       console.error(err)
       res.status(500).send('Erreur lors de la récupération des voitures Luxury')
     } else {
-      console.log('Voitures Luxury:', result)
       res.json(result)
     }
   })
@@ -47,8 +47,39 @@ app.get('/api/cars/standard', (req, res) => {
       console.error(err)
       res.status(500).send('Erreur lors de la récupération des voitures Standard')
     } else {
-      console.log('Voitures Standard:', result)
       res.json(result)
+    }
+  })
+})
+
+// Route pour l'authentification admin
+app.post('/api/admin/login', (req, res) => {
+  const { email, password } = req.body
+
+  const query = 'SELECT * FROM administrators WHERE EMAIL_ADMIN = ?'
+  db.query(query, [email], async (err, results) => {
+    if (err) {
+      console.error(err)
+      res.status(500).send('Erreur serveur')
+    } else if (results.length === 0) {
+      res.status(401).send('Administrateur introuvable')
+    } else {
+      const admin = results[0]
+      const isPasswordValid = await bcrypt.compare(password, admin.PASSWORD_ADMIN)
+
+      if (isPasswordValid) {
+        res.json({
+          success: true,
+          message: 'Connexion réussie',
+          admin: {
+            email: admin.EMAIL_ADMIN,
+            firstName: admin.FIRST_NAME_ADMIN,
+            lastName: admin.LAST_NAME_ADMIN
+          }
+        })
+      } else {
+        res.status(401).send('Mot de passe incorrect')
+      }
     }
   })
 })
@@ -57,5 +88,3 @@ app.get('/api/cars/standard', (req, res) => {
 app.listen(5000, () => {
   console.log('Serveur lancé sur http://localhost:5000')
 })
-
-console.log(this.filteredCars);

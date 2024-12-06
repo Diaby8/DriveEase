@@ -1,19 +1,15 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
-import AboutView from '../views/AboutView.vue'
 import LuxuryView from '../views/LuxuryView.vue'
 import StandardView from '../views/StandardView.vue'
+import AdminLogin from '../views/AdminLogin.vue'
+import AdminDashboard from '../views/AdminDashboard.vue'
 
 const routes = [
   {
     path: '/',
     name: 'home',
     component: HomeView
-  },
-  {
-    path: '/about',
-    name: 'about',
-    component: AboutView
   },
   {
     path: '/luxury',
@@ -24,6 +20,16 @@ const routes = [
     path: '/standard',
     name: 'standard',
     component: StandardView
+  },
+  {
+    path: '/admin-login',
+    name: 'AdminLogin',
+    component: AdminLogin
+  },
+  {
+    path: '/admin-dashboard',
+    name: 'AdminDashboard',
+    component: AdminDashboard
   }
 ]
 
