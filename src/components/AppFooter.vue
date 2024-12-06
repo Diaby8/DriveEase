@@ -31,14 +31,6 @@
         </ul>
       </div>
 
-      <!-- Section 4: Admin -->
-      <div class="footer-column">
-        <h4>Admin</h4>
-        <ul>
-          <li @click="navigateTo('/admin-login')">Admin Login</li>
-        </ul>
-      </div>
-
       <!-- Social Media -->
       <div class="footer-socials">
         <a href="https://instagram.com" target="_blank">Instagram</a>
