@@ -20,16 +20,6 @@ const routes = [
     path: '/standard',
     name: 'standard',
     component: StandardView
-  },
-  {
-    path: '/admin-login',
-    name: 'AdminLogin',
-    component: AdminLogin
-  },
-  {
-    path: '/admin-dashboard',
-    name: 'AdminDashboard',
-    component: AdminDashboard
   }
 ]
 

@@ -52,37 +52,6 @@ app.get('/api/cars/standard', (req, res) => {
   })
 })
 
-// Route pour l'authentification admin
-app.post('/api/admin/login', (req, res) => {
-  const { email, password } = req.body
-
-  const query = 'SELECT * FROM administrators WHERE EMAIL_ADMIN = ?'
-  db.query(query, [email], async (err, results) => {
-    if (err) {
-      console.error(err)
-      res.status(500).send('Erreur serveur')
-    } else if (results.length === 0) {
-      res.status(401).send('Administrateur introuvable')
-    } else {
-      const admin = results[0]
-      const isPasswordValid = await bcrypt.compare(password, admin.PASSWORD_ADMIN)
-
-      if (isPasswordValid) {
-        res.json({
-          success: true,
-          message: 'Connexion réussie',
-          admin: {
-            email: admin.EMAIL_ADMIN,
-            firstName: admin.FIRST_NAME_ADMIN,
-            lastName: admin.LAST_NAME_ADMIN
-          }
-        })
-      } else {
-        res.status(401).send('Mot de passe incorrect')
-      }
-    }
-  })
-})
 
 const PORT = process.env.PORT || 5001; // Utilise le port 5001 si 5000 est occupé
 app.listen(PORT, () => {
