@@ -84,7 +84,7 @@ app.post('/api/admin/login', (req, res) => {
   })
 })
 
-// Lancement du serveur
-app.listen(5000, () => {
-  console.log('Serveur lancé sur http://localhost:5000')
-})
+const PORT = process.env.PORT || 5001; // Utilise le port 5001 si 5000 est occupé
+app.listen(PORT, () => {
+  console.log(`Serveur lancé sur http://localhost:${PORT}`);
+});
