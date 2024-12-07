@@ -1,6 +1,6 @@
 <template>
   <section>
-    <!-- Section de la bannière -->
+    <!-- Banner Section -->
     <div class="banner">
       <img class="banner-image" src="/images/cars/Audi_RS6_Black.jpg" alt="Luxury Cars Banner" />
       <div class="banner-overlay">
@@ -8,7 +8,7 @@
       </div>
     </div>
 
-    <!-- Section de filtrage -->
+    <!-- Filtering Section -->
     <div class="filters">
       <label for="fuel">Filter by Fuel:</label>
       <select id="fuel" v-model="selectedFuel">
@@ -20,17 +20,18 @@
       </select>
 
       <label for="price">Max Price ($/day):</label>
-      <input
-        id="price"
-        type="number"
-        v-model.number="maxPrice"
-        placeholder="Enter max price"
-      />
+      <input id="price" type="number" v-model.number="maxPrice" placeholder="Enter max price" />
+
+      <label for="startDate">Start Date:</label>
+      <input type="date" id="startDate" v-model="startDate" />
+
+      <label for="endDate">End Date:</label>
+      <input type="date" id="endDate" v-model="endDate" />
     </div>
 
-    <!-- Liste des voitures -->
+    <!-- Car List -->
     <div class="car-list">
-      <div class="car" v-for="(car, index) in groupedCars" :key="index">
+      <div class="car" v-for="(car, index) in filteredCars" :key="index">
         <div class="image-wrapper">
           <img :src="car.IMAGE_URL" :alt="car.BRAND + ' ' + car.MODEL" />
         </div>
@@ -38,7 +39,6 @@
         <p>Fuel: {{ car.FUEL }}</p>
         <p>Transmission: {{ car.TRANSMISSION }}</p>
         <p>Price: ${{ car.PRICE_DAY }} / day</p>
-        <p>{{ car.count }} available</p>
       </div>
     </div>
   </section>
@@ -51,54 +51,43 @@ export default {
   name: 'LuxuryView',
   data () {
     return {
-      cars: [], // Toutes les voitures récupérées depuis l'API
-      selectedFuel: '', // Type de carburant sélectionné
-      maxPrice: 0 // Prix maximum
+      cars: [],
+      selectedFuel: '',
+      maxPrice: 0,
+      startDate: '',
+      endDate: ''
     }
   },
   computed: {
     filteredCars () {
       return this.cars.filter((car) => {
-        // Filtre par carburant
         const matchesFuel =
           this.selectedFuel === '' || car.FUEL === this.selectedFuel
 
-        // Filtre par prix
         const matchesPrice =
           this.maxPrice === 0 || car.PRICE_DAY <= this.maxPrice
 
-        return matchesFuel && matchesPrice
-      })
-    },
-    groupedCars () {
-      const grouped = {}
+        const matchesDates =
+          (!this.startDate || !car.PICKUP_DATE || new Date(this.startDate) <= new Date(car.PICKUP_DATE)) &&
+          (!this.endDate || !car.RETURN_DATE || new Date(this.endDate) >= new Date(car.RETURN_DATE))
 
-      // Regrouper les voitures par modèle et autres propriétés pertinentes
-      this.filteredCars.forEach((car) => {
-        const key = `${car.BRAND}-${car.MODEL}-${car.FUEL}-${car.TRANSMISSION}-${car.PRICE_DAY}`
-        if (!grouped[key]) {
-          grouped[key] = {
-            ...car,
-            count: 1
-          }
-        } else {
-          grouped[key].count += 1
-        }
+        return matchesFuel && matchesPrice && matchesDates
       })
-
-      // Convertir l'objet en tableau
-      return Object.values(grouped)
     }
   },
   mounted () {
-    // Appel à l'API pour récupérer les voitures de type luxury
+    const { startDate, endDate } = this.$route.query
+
+    this.startDate = startDate || ''
+    this.endDate = endDate || ''
+
     axios
       .get('http://localhost:5000/api/cars/luxury')
       .then((response) => {
         this.cars = response.data
       })
       .catch((error) => {
-        console.error('Erreur lors de la récupération des voitures Luxury:', error)
+        console.error('Error fetching luxury cars:', error)
       })
   }
 }

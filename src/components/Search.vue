@@ -1,103 +1,70 @@
 <template>
-  <transition name="fade">
-    <section class="search" v-show="isVisible">
-      <div class="container">
-        <h2>Find Your Perfect Ride</h2>
-        <form @submit.prevent="handleSearch">
-          <!-- Localisation -->
-          <label for="location">Pick-up Location:</label>
-          <select id="location" v-model="location" required>
-            <option disabled value="">Select a location</option>
-            <option value="Paris">Paris</option>
-            <option value="Lyon">Lyon</option>
-            <option value="Marseille">Marseille</option>
-          </select>
+  <section class="search">
+    <form @submit.prevent="handleSearch">
+      <!-- Formulaire pour sélectionner la localisation, les dates, et la catégorie -->
+      <label for="location">Pick-up Location:</label>
+      <select id="location" v-model="location" required>
+        <option disabled value="">Select a location</option>
+        <option value="Paris">Paris</option>
+        <option value="Lyon">Lyon</option>
+        <option value="Marseille">Marseille</option>
+      </select>
 
-          <!-- Date de départ -->
-          <label for="startDate">Pick-up Date:</label>
-          <input type="date" id="startDate" v-model="startDate" required />
+      <label for="startDate">Pick-up Date:</label>
+      <input type="date" id="startDate" v-model="startDate" required />
 
-          <!-- Date de retour -->
-          <label for="endDate">Return Date:</label>
-          <!-- Ajouter :min="startDate" pour bloquer les dates antérieures à startDate -->
-          <input type="date" id="endDate" v-model="endDate" :min="startDate" required />
+      <label for="endDate">Return Date:</label>
+      <input type="date" id="endDate" v-model="endDate" :min="startDate" required />
 
-          <!-- Catégorie -->
-          <label for="category">Category:</label>
-          <select id="category" v-model="category" required>
-            <option disabled value="">Select a category</option>
-            <option value="luxury">Luxury</option>
-            <option value="standard">Standard</option>
-          </select>
+      <label for="category">Category:</label>
+      <select id="category" v-model="category" required>
+        <option disabled value="">Select a category</option>
+        <option value="luxury">Luxury</option>
+        <option value="standard">Standard</option>
+      </select>
 
-          <!-- Bouton de soumission -->
-          <button type="submit">Search</button>
-        </form>
-      </div>
-    </section>
-  </transition>
+      <button type="submit">Search</button>
+    </form>
+  </section>
 </template>
-<script>
-import axios from 'axios'
 
+<script>
 export default {
   name: 'UserSearch',
   data () {
     return {
-      isVisible: false,
       location: '',
       startDate: '',
       endDate: '',
       category: ''
     }
   },
-  mounted () {
-    setTimeout(() => {
-      this.isVisible = true
-    }, 500)
-  },
   methods: {
-    async handleSearch () {
-      // Validation des champs
+    handleSearch () {
+      // Vérification des champs obligatoires
       if (!this.location || !this.startDate || !this.endDate || !this.category) {
-        alert('Veuillez remplir tous les champs.')
+        alert('Please fill in all fields.')
         return
       }
 
-      // Vérification des dates
+      // Validation des dates
       const start = new Date(this.startDate)
       const end = new Date(this.endDate)
 
       if (start > end) {
-        alert('The pick-up date cannot be after the return date.')
+        alert('Start date cannot be after end date.')
         return
       }
 
-      try {
-        const response = await axios.post('http://localhost:5000/api/search/advanced', {
+      // Redirection vers la page avec les filtres appliqués
+      this.$router.push({
+        path: this.category === 'luxury' ? '/luxury' : '/standard',
+        query: {
           location: this.location,
           startDate: this.startDate,
-          endDate: this.endDate,
-          category: this.category
-        })
-
-        if (response.data.success) {
-          this.$router.push({
-            path: '/search-results',
-            query: {
-              location: this.location,
-              startDate: this.startDate,
-              endDate: this.endDate,
-              category: this.category
-            }
-          })
-        } else {
-          alert(response.data.message || 'No cars found for the selected criteria.')
+          endDate: this.endDate
         }
-      } catch (error) {
-        console.error('Erreur lors de la recherche avancée :', error)
-        alert('Une erreur est survenue lors de la recherche.')
-      }
+      })
     }
   }
 }
