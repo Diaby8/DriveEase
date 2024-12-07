@@ -31,6 +31,14 @@
         </ul>
       </div>
 
+      <!-- Section 4: Admin -->
+      <div class="footer-column">
+        <h4>Admin</h4>
+        <ul>
+          <li @click="navigateTo('/admin-login')">Admin Login</li>
+        </ul>
+      </div>
+
       <!-- Social Media -->
       <div class="footer-socials">
         <a href="https://instagram.com" target="_blank">Instagram</a>
@@ -49,6 +57,16 @@
 <script>
 export default {
   name: 'AppFooter',
+  data () {
+    return {
+      isAdmin: false // Par défaut, non-admin
+    }
+  },
+  created () {
+    // Vérifiez si l'utilisateur est admin (par exemple via localStorage ou une API)
+    const userRole = localStorage.getItem('role') // Récupérez le rôle depuis le localStorage ou une API
+    this.isAdmin = userRole === 'admin' // Affiche le lien uniquement pour les admins
+  },
   methods: {
     navigateTo (path) {
       this.$router.push(path)
