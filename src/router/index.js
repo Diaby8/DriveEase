@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import HomeView from '@/views/HomeView.vue'
 import LuxuryView from '../views/LuxuryView.vue'
 import StandardView from '../views/StandardView.vue'
 import AdminLogin from '../views/AdminLogin.vue' // Vue pour la connexion admin
@@ -10,6 +10,10 @@ const routes = [
     path: '/',
     name: 'home',
     component: HomeView
+  },
+  {
+    path: '/home',
+    redirect: '/' // Redirige `/home` vers `/`
   },
   {
     path: '/luxury',

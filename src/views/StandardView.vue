@@ -1,9 +1,8 @@
 <template>
   <section>
-    <!-- Bouton Home -->
-    <div class="top-right-button">
-      <button class="custom-button" @click="goHome">Home</button>
-    </div>
+    <!-- AppHeader -->
+    <AppHeader />
+
     <!-- Banner Section -->
     <div class="banner">
       <img class="banner-image" src="/images/cars/Renault_Clio_Blue.jpg" alt="Standard Cars Banner" />
@@ -12,31 +11,37 @@
       </div>
     </div>
 
-    <!-- Filtering Section -->
-    <div class="filters">
-      <label for="location">Filter by Location:</label>
-      <select id="location" v-model.number="selectedLocation">
-        <option value="">All</option>
-        <option value="1">Paris</option>
-        <option value="2">Marseille</option>
-        <option value="3">Lyon</option>
-      </select>
+    <!-- Layout avec Sidebar et Liste des voitures -->
+    <div class="layout">
+      <!-- Sidebar -->
+      <FilterSidebar
+        :selectedLocation="selectedLocation"
+        :maxPrice="maxPrice"
+        @update:selectedLocation="updateSelectedLocation"
+        @update:maxPrice="updateMaxPrice"
+      />
 
-      <label for="price">Max Price ($/day):</label>
-      <input id="price" type="number" v-model.number="maxPrice" placeholder="Enter max price" />
-    </div>
+      <!-- Liste des voitures -->
+      <div class="car-list">
+        <div class="car" v-for="(car, index) in filteredCars" :key="index">
+          <div class="car-content">
+            <!-- Image de la voiture -->
+            <div class="image-wrapper">
+              <img :src="car.IMAGE_URL" :alt="car.BRAND + ' ' + car.MODEL" />
+            </div>
 
-    <!-- Car List -->
-    <div class="car-list">
-      <div class="car" v-for="(car, index) in filteredCars" :key="index">
-        <div class="image-wrapper">
-          <img :src="car.IMAGE_URL" :alt="car.BRAND + ' ' + car.MODEL" />
+            <!-- Informations sur la voiture -->
+            <div class="car-info">
+              <h3>{{ car.BRAND }} {{ car.MODEL }}</h3>
+              <p>Fuel: {{ car.FUEL }}</p>
+              <p>Transmission: {{ car.TRANSMISSION }}</p>
+              <p>Price: ${{ car.PRICE_DAY }} / day</p>
+              <p>Location: {{ getLocationName(car.CURRENT_LOCATION) }}</p>
+              <!-- Bouton Rent -->
+              <button class="rent-button">Rent</button>
+            </div>
+          </div>
         </div>
-        <h3>{{ car.BRAND }} {{ car.MODEL }}</h3>
-        <p>Fuel: {{ car.FUEL }}</p>
-        <p>Transmission: {{ car.TRANSMISSION }}</p>
-        <p>Price: ${{ car.PRICE_DAY }} / day</p>
-        <p>Location: {{ getLocationName(car.CURRENT_LOCATION) }}</p>
       </div>
     </div>
   </section>
@@ -44,9 +49,12 @@
 
 <script>
 import axios from 'axios'
+import FilterSidebar from '@/components/FilterSidebar.vue'
+import AppHeader from '@/components/AppHeader.vue'
 
 export default {
   name: 'StandardView',
+  components: { FilterSidebar, AppHeader },
   data () {
     return {
       cars: [],
@@ -61,14 +69,19 @@ export default {
           this.selectedLocation === '' ||
           car.CURRENT_LOCATION === parseInt(this.selectedLocation, 10)
 
-        const matchesPrice =
-          this.maxPrice === 0 || car.PRICE_DAY <= this.maxPrice
+        const matchesPrice = this.maxPrice === 0 || car.PRICE_DAY <= this.maxPrice
 
         return matchesLocation && matchesPrice
       })
     }
   },
   methods: {
+    updateSelectedLocation (newLocation) {
+      this.selectedLocation = newLocation
+    },
+    updateMaxPrice (newPrice) {
+      this.maxPrice = newPrice
+    },
     getLocationName (locationId) {
       const locations = {
         1: 'Paris',
@@ -98,6 +111,20 @@ export default {
 </script>
 
 <style scoped>
+/* Layout entre la Sidebar et la liste des voitures */
+.layout {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  padding: 20px;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 250px;
+}
+
+/* Bannière */
 .banner {
   position: relative;
   width: 100%;
@@ -126,7 +153,7 @@ export default {
 .banner-overlay h1 {
   color: white;
   font-size: 3rem;
-  font-family: "Oswald", sans-serif;
+  font-family: 'Oswald', sans-serif;
   text-transform: uppercase;
   text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.8);
   animation: zoom-slow 5s infinite alternate ease-in-out;
@@ -141,51 +168,27 @@ export default {
   }
 }
 
-.filters {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 20px;
-  margin: 20px auto;
-}
-
-.filters label {
-  color: #ffffff;
-  font-size: 1rem;
-  margin-right: 10px;
-}
-
-.filters select,
-.filters input {
-  padding: 8px 10px;
-  font-size: 1rem;
-  border-radius: 5px;
-  border: none;
-  background-color: #ffffff;
-  color: #333333;
-}
-
-.filters input {
-  width: 150px;
-}
-
+/* Liste des voitures */
 .car-list {
+  flex: 1;
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 20px;
-  justify-content: center;
   margin: 20px auto;
   padding: 0 20px;
 }
 
 .car {
-  width: 300px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
   background: rgba(255, 255, 255, 0.1);
   padding: 20px;
   border-radius: 15px;
-  text-align: center;
+  text-align: left;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  height: 250px;
 }
 
 .car:hover {
@@ -193,41 +196,42 @@ export default {
   box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2);
 }
 
-.image-wrapper {
+/* Image et informations de la voiture */
+.car-content {
+  display: flex;
   width: 100%;
-  height: 200px;
+}
+
+.image-wrapper {
+  flex: 1;
+  height: 100%;
+  max-height: 250px;
   overflow: hidden;
   border-radius: 10px;
-  margin-bottom: 15px;
+  margin-right: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .image-wrapper img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  border-radius: 10px;
 }
 
-.car h3 {
-  font-size: 1.25rem;
-  margin: 10px 0;
-  color: #ffffff;
+.car-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
 }
 
-.car p {
-  font-size: 1rem;
-  margin: 5px 0;
-  color: #cccccc;
-}
-
-.top-right-button {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  z-index: 2;
-}
-
-.custom-button {
-  font-family: "Oswald", sans-serif;
+/* Bouton Rent */
+.rent-button {
+  font-family: 'Oswald', sans-serif;
   font-size: 14px;
   text-transform: uppercase;
   color: white;
@@ -237,9 +241,12 @@ export default {
   cursor: pointer;
   border-radius: 5px;
   transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
 }
 
-.custom-button:hover {
+.rent-button:hover {
   background-color: white;
   color: black;
   transform: scale(1.1);
