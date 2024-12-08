@@ -9,6 +9,7 @@
         <option value="3">Lyon</option>
       </select>
     </div>
+
     <div class="filter-group">
       <label for="price">Max Price ($/day):</label>
       <input
@@ -18,6 +19,43 @@
         @input="updatePrice"
         placeholder="Enter max price"
       />
+    </div>
+
+    <div class="filter-group">
+      <label for="transmission">Filter by Transmission:</label>
+      <select id="transmission" v-model="localSelectedTransmission" @change="updateTransmission">
+        <option value="">All</option>
+        <option value="MANUAL">Manual</option>
+        <option value="AUTOMATIC">Automatic</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label for="motorisation">Filter by Motorisation:</label>
+      <select id="motorisation" v-model="localSelectedMotorisation" @change="updateMotorisation">
+        <option value="">All</option>
+        <option value="PETROL">Petrol</option>
+        <option value="DIESEL">Diesel</option>
+        <option value="HYBRID">Hybrid</option>
+        <option value="ELECTRIC">Electric</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label for="brand">Filter by Brand:</label>
+      <select id="brand" v-model="localSelectedBrand" @change="updateBrand">
+        <option value="">All</option>
+        <option value="AUDI">Audi</option>
+        <option value="BMW">BMW</option>
+        <option value="FIAT">Fiat</option>
+        <option value="MERCEDES-BENZ">Mercedes-Benz</option>
+        <option value="PEUGEOT">Peugeot</option>
+        <option value="RANGE ROVER">Range Rover</option>
+        <option value="RENAULT">Renault</option>
+        <option value="TESLA">Tesla</option>
+        <option value="TOYOTA">Toyota</option>
+        <option value="VOLKSWAGEN">Volkswagen</option>
+      </select>
     </div>
   </aside>
 </template>
@@ -33,12 +71,27 @@ export default {
     maxPrice: {
       type: Number,
       default: 0
+    },
+    selectedTransmission: {
+      type: String,
+      default: ''
+    },
+    selectedMotorisation: {
+      type: String,
+      default: ''
+    },
+    selectedBrand: {
+      type: String,
+      default: ''
     }
   },
   data () {
     return {
       localSelectedLocation: this.selectedLocation,
-      localMaxPrice: this.maxPrice
+      localMaxPrice: this.maxPrice,
+      localSelectedTransmission: this.selectedTransmission,
+      localSelectedMotorisation: this.selectedMotorisation,
+      localSelectedBrand: this.selectedBrand
     }
   },
   methods: {
@@ -47,6 +100,15 @@ export default {
     },
     updatePrice () {
       this.$emit('update:maxPrice', this.localMaxPrice)
+    },
+    updateTransmission () {
+      this.$emit('update:selectedTransmission', this.localSelectedTransmission)
+    },
+    updateMotorisation () {
+      this.$emit('update:selectedMotorisation', this.localSelectedMotorisation)
+    },
+    updateBrand () {
+      this.$emit('update:selectedBrand', this.localSelectedBrand)
     }
   }
 }
@@ -80,16 +142,5 @@ input {
   background-color: #ffffff;
   color: #333333;
   font-size: 1rem;
-}
-
-input[type="number"] {
-  appearance: none; /* Modern browsers */
-  -moz-appearance: none; /* Pour Firefox */
-  -webkit-appearance: none; /* Pour Chrome/Safari */
-}
-
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button {
-  -webkit-appearance: none;
 }
 </style>
