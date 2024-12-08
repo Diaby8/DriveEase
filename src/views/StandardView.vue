@@ -1,5 +1,9 @@
 <template>
   <section>
+    <!-- Bouton Home -->
+    <div class="top-right-button">
+      <button class="custom-button" @click="goHome">Home</button>
+    </div>
     <!-- Banner Section -->
     <div class="banner">
       <img class="banner-image" src="/images/cars/Renault_Clio_Blue.jpg" alt="Standard Cars Banner" />
@@ -32,6 +36,7 @@
         <p>Fuel: {{ car.FUEL }}</p>
         <p>Transmission: {{ car.TRANSMISSION }}</p>
         <p>Price: ${{ car.PRICE_DAY }} / day</p>
+        <p>Location: {{ getLocationName(car.CURRENT_LOCATION) }}</p>
       </div>
     </div>
   </section>
@@ -61,6 +66,19 @@ export default {
 
         return matchesLocation && matchesPrice
       })
+    }
+  },
+  methods: {
+    getLocationName (locationId) {
+      const locations = {
+        1: 'Paris',
+        2: 'Marseille',
+        3: 'Lyon'
+      }
+      return locations[locationId] || 'Unknown'
+    },
+    goHome () {
+      this.$router.push('/')
     }
   },
   mounted () {
@@ -199,5 +217,31 @@ export default {
   font-size: 1rem;
   margin: 5px 0;
   color: #cccccc;
+}
+
+.top-right-button {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 2;
+}
+
+.custom-button {
+  font-family: "Oswald", sans-serif;
+  font-size: 14px;
+  text-transform: uppercase;
+  color: white;
+  background-color: transparent;
+  border: 2px solid white;
+  padding: 8px 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+}
+
+.custom-button:hover {
+  background-color: white;
+  color: black;
+  transform: scale(1.1);
 }
 </style>
