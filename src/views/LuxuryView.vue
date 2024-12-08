@@ -17,8 +17,14 @@
       <FilterSidebar
         :selectedLocation="selectedLocation"
         :maxPrice="maxPrice"
+        :selectedTransmission="selectedTransmission"
+        :selectedMotorisation="selectedMotorisation"
+        :selectedBrand="selectedBrand"
         @update:selectedLocation="updateSelectedLocation"
         @update:maxPrice="updateMaxPrice"
+        @update:selectedTransmission="updateSelectedTransmission"
+        @update:selectedMotorisation="updateSelectedMotorisation"
+        @update:selectedBrand="updateSelectedBrand"
       />
 
       <!-- Liste des voitures -->
@@ -29,7 +35,6 @@
             <div class="image-wrapper">
               <img :src="car.IMAGE_URL" :alt="car.BRAND + ' ' + car.MODEL" />
             </div>
-
             <!-- Informations sur la voiture -->
             <div class="car-info">
               <h3>{{ car.BRAND }} {{ car.MODEL }}</h3>
@@ -59,7 +64,10 @@ export default {
     return {
       cars: [],
       selectedLocation: '',
-      maxPrice: 0
+      maxPrice: 0,
+      selectedTransmission: '',
+      selectedMotorisation: '',
+      selectedBrand: ''
     }
   },
   computed: {
@@ -71,7 +79,16 @@ export default {
 
         const matchesPrice = this.maxPrice === 0 || car.PRICE_DAY <= this.maxPrice
 
-        return matchesLocation && matchesPrice
+        const matchesTransmission =
+          this.selectedTransmission === '' || car.TRANSMISSION === this.selectedTransmission
+
+        const matchesMotorisation =
+          this.selectedMotorisation === '' || car.FUEL?.toUpperCase() === this.selectedMotorisation
+
+        const matchesBrand =
+          this.selectedBrand === '' || car.BRAND?.toUpperCase() === this.selectedBrand
+
+        return matchesLocation && matchesPrice && matchesTransmission && matchesMotorisation && matchesBrand
       })
     }
   },
@@ -82,6 +99,15 @@ export default {
     updateMaxPrice (newPrice) {
       this.maxPrice = newPrice
     },
+    updateSelectedTransmission (newTransmission) {
+      this.selectedTransmission = newTransmission
+    },
+    updateSelectedMotorisation (newMotorisation) {
+      this.selectedMotorisation = newMotorisation
+    },
+    updateSelectedBrand (newBrand) {
+      this.selectedBrand = newBrand
+    },
     getLocationName (locationId) {
       const locations = {
         1: 'Paris',
@@ -89,19 +115,14 @@ export default {
         3: 'Lyon'
       }
       return locations[locationId] || 'Unknown'
-    },
-    goHome () {
-      this.$router.push('/')
     }
   },
   mounted () {
-    const { location } = this.$route.query
-    this.selectedLocation = location || ''
-
     axios
       .get('http://localhost:5000/api/cars/luxury')
       .then((response) => {
         this.cars = response.data
+        console.log('Luxury cars data:', this.cars) // Debug: Vérifie les données récupérées
       })
       .catch((error) => {
         console.error('Error fetching luxury cars:', error)
@@ -153,7 +174,7 @@ export default {
 .banner-overlay h1 {
   color: white;
   font-size: 3rem;
-  font-family: 'Oswald', sans-serif;
+  font-family: "Oswald", sans-serif;
   text-transform: uppercase;
   text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.8);
   animation: zoom-slow 5s infinite alternate ease-in-out;
@@ -196,7 +217,6 @@ export default {
   box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2);
 }
 
-/* Image et informations de la voiture */
 .car-content {
   display: flex;
   width: 100%;
@@ -231,7 +251,7 @@ export default {
 
 /* Bouton Rent */
 .rent-button {
-  font-family: 'Oswald', sans-serif;
+  font-family: "Oswald", sans-serif;
   font-size: 14px;
   text-transform: uppercase;
   color: white;

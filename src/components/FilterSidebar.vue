@@ -1,5 +1,6 @@
 <template>
   <aside class="sidebar">
+    <!-- Location Filter -->
     <div class="filter-group">
       <label for="location">Filter by Location:</label>
       <select id="location" v-model="localSelectedLocation" @change="updateLocation">
@@ -10,6 +11,7 @@
       </select>
     </div>
 
+    <!-- Price Filter -->
     <div class="filter-group">
       <label for="price">Max Price ($/day):</label>
       <input
@@ -21,6 +23,7 @@
       />
     </div>
 
+    <!-- Transmission Filter -->
     <div class="filter-group">
       <label for="transmission">Filter by Transmission:</label>
       <select id="transmission" v-model="localSelectedTransmission" @change="updateTransmission">
@@ -30,6 +33,7 @@
       </select>
     </div>
 
+    <!-- Motorisation Filter -->
     <div class="filter-group">
       <label for="motorisation">Filter by Motorisation:</label>
       <select id="motorisation" v-model="localSelectedMotorisation" @change="updateMotorisation">
@@ -41,6 +45,7 @@
       </select>
     </div>
 
+    <!-- Brand Filter -->
     <div class="filter-group">
       <label for="brand">Filter by Brand:</label>
       <select id="brand" v-model="localSelectedBrand" @change="updateBrand">
