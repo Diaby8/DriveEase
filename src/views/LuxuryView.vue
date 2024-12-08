@@ -10,23 +10,16 @@
 
     <!-- Filtering Section -->
     <div class="filters">
-      <label for="fuel">Filter by Fuel:</label>
-      <select id="fuel" v-model="selectedFuel">
+      <label for="location">Filter by Location:</label>
+      <select id="location" v-model.number="selectedLocation">
         <option value="">All</option>
-        <option value="PETROL">Petrol</option>
-        <option value="DIESEL">Diesel</option>
-        <option value="ELECTRIC">Electric</option>
-        <option value="HYBRID">Hybrid</option>
+        <option value="1">Paris</option>
+        <option value="2">Marseille</option>
+        <option value="3">Lyon</option>
       </select>
 
       <label for="price">Max Price ($/day):</label>
       <input id="price" type="number" v-model.number="maxPrice" placeholder="Enter max price" />
-
-      <label for="startDate">Start Date:</label>
-      <input type="date" id="startDate" v-model="startDate" />
-
-      <label for="endDate">End Date:</label>
-      <input type="date" id="endDate" v-model="endDate" />
     </div>
 
     <!-- Car List -->
@@ -52,34 +45,27 @@ export default {
   data () {
     return {
       cars: [],
-      selectedFuel: '',
-      maxPrice: 0,
-      startDate: '',
-      endDate: ''
+      selectedLocation: '',
+      maxPrice: 0
     }
   },
   computed: {
     filteredCars () {
       return this.cars.filter((car) => {
-        const matchesFuel =
-          this.selectedFuel === '' || car.FUEL === this.selectedFuel
+        const matchesLocation =
+          this.selectedLocation === '' ||
+          car.CURRENT_LOCATION === parseInt(this.selectedLocation, 10)
 
         const matchesPrice =
           this.maxPrice === 0 || car.PRICE_DAY <= this.maxPrice
 
-        const matchesDates =
-          (!this.startDate || !car.PICKUP_DATE || new Date(this.startDate) <= new Date(car.PICKUP_DATE)) &&
-          (!this.endDate || !car.RETURN_DATE || new Date(this.endDate) >= new Date(car.RETURN_DATE))
-
-        return matchesFuel && matchesPrice && matchesDates
+        return matchesLocation && matchesPrice
       })
     }
   },
   mounted () {
-    const { startDate, endDate } = this.$route.query
-
-    this.startDate = startDate || ''
-    this.endDate = endDate || ''
+    const { location } = this.$route.query
+    this.selectedLocation = location || ''
 
     axios
       .get('http://localhost:5000/api/cars/luxury')
@@ -94,7 +80,6 @@ export default {
 </script>
 
 <style scoped>
-/* Bannière pleine largeur */
 .banner {
   position: relative;
   width: 100%;
@@ -123,7 +108,7 @@ export default {
 .banner-overlay h1 {
   color: white;
   font-size: 3rem;
-  font-family: 'Oswald', sans-serif;
+  font-family: "Oswald", sans-serif;
   text-transform: uppercase;
   text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.8);
   animation: zoom-slow 5s infinite alternate ease-in-out;
@@ -138,7 +123,6 @@ export default {
   }
 }
 
-/* Section de filtrage */
 .filters {
   display: flex;
   justify-content: center;
@@ -167,7 +151,6 @@ export default {
   width: 150px;
 }
 
-/* Conteneur des voitures */
 .car-list {
   display: flex;
   flex-wrap: wrap;
@@ -177,7 +160,6 @@ export default {
   padding: 0 20px;
 }
 
-/* Carte individuelle */
 .car {
   width: 300px;
   background: rgba(255, 255, 255, 0.1);

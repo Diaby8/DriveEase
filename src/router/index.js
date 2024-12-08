@@ -4,7 +4,6 @@ import LuxuryView from '../views/LuxuryView.vue'
 import StandardView from '../views/StandardView.vue'
 import AdminLogin from '../views/AdminLogin.vue' // Vue pour la connexion admin
 import AdminDashboard from '../views/AdminDashboard.vue' // Importez le composant
-import SearchResults from '../views/SearchResults.vue' // Ajoutez cette ligne pour importer le composant
 
 const routes = [
   {
@@ -31,11 +30,6 @@ const routes = [
     path: '/admin-dashboard',
     name: 'admin-dashboard',
     component: AdminDashboard // Associez le composant AdminDashboard
-  },
-  {
-    path: '/search-results',
-    name: 'SearchResults',
-    component: SearchResults
   }
 ]
 

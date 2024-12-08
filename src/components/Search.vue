@@ -1,7 +1,7 @@
 <template>
   <section class="search">
     <form @submit.prevent="handleSearch">
-      <!-- Formulaire pour sélectionner la localisation, les dates, et la catégorie -->
+      <!-- Formulaire pour sélectionner la localisation et la catégorie -->
       <label for="location">Pick-up Location:</label>
       <select id="location" v-model="location" required>
         <option disabled value="">Select a location</option>
@@ -9,12 +9,6 @@
         <option value="Lyon">Lyon</option>
         <option value="Marseille">Marseille</option>
       </select>
-
-      <label for="startDate">Pick-up Date:</label>
-      <input type="date" id="startDate" v-model="startDate" required />
-
-      <label for="endDate">Return Date:</label>
-      <input type="date" id="endDate" v-model="endDate" :min="startDate" required />
 
       <label for="category">Category:</label>
       <select id="category" v-model="category" required>
@@ -34,25 +28,14 @@ export default {
   data () {
     return {
       location: '',
-      startDate: '',
-      endDate: '',
       category: ''
     }
   },
   methods: {
     handleSearch () {
       // Vérification des champs obligatoires
-      if (!this.location || !this.startDate || !this.endDate || !this.category) {
+      if (!this.location || !this.category) {
         alert('Please fill in all fields.')
-        return
-      }
-
-      // Validation des dates
-      const start = new Date(this.startDate)
-      const end = new Date(this.endDate)
-
-      if (start > end) {
-        alert('Start date cannot be after end date.')
         return
       }
 
@@ -60,9 +43,7 @@ export default {
       this.$router.push({
         path: this.category === 'luxury' ? '/luxury' : '/standard',
         query: {
-          location: this.location,
-          startDate: this.startDate,
-          endDate: this.endDate
+          location: this.location
         }
       })
     }
