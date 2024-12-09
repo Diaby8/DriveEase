@@ -8,16 +8,39 @@
       <button class="nav-button" @click="navigateTo('standard')">Standard Cars</button>
       <button class="nav-button" @click="navigateTo('luxury')">Luxury Cars</button>
       <button class="nav-button" @click="navigateTo('contact')">Contact</button>
+      <button
+        class="nav-button"
+        v-if="!isLoggedIn"
+        @click="navigateTo('login')"
+      >
+        Login
+      </button>
+      <button
+        class="nav-button"
+        v-if="isLoggedIn"
+        @click="logout"
+      >
+        Logout
+      </button>
     </nav>
   </header>
 </template>
 
 <script>
 export default {
-  name: 'AppHeader',
+  computed: {
+    isLoggedIn () {
+      return !!localStorage.getItem('userToken') // Vérifie si l'utilisateur est connecté
+    }
+  },
   methods: {
     navigateTo (route) {
       this.$router.push(`/${route}`)
+    },
+    logout () {
+      localStorage.removeItem('userToken') // Supprime le token utilisateur
+      alert('You have been logged out.')
+      this.$router.push('/') // Redirige vers la page d'accueil
     }
   }
 }

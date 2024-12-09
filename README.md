@@ -69,5 +69,7 @@ AVANT de Run pour la premiere fois (npm run serve):
 IMPORTANT: copiez le contenu du fichier "env.exemple" et creer fichier "env. pour coller le contenu dedans, mettez ensuite votre propre mot de passe mySQL a la ligne password. Pensez aussi a ouvrir le fichier "database.sql" sur mysql
 
 
+netstat -aon | findstr :5000
+
 
 MERCI L'EQUIPE

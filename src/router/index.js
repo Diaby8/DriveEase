@@ -4,6 +4,8 @@ import LuxuryView from '../views/LuxuryView.vue'
 import StandardView from '../views/StandardView.vue'
 import AdminLogin from '../views/AdminLogin.vue' // Vue pour la connexion admin
 import AdminDashboard from '../views/AdminDashboard.vue' // Importez le composant
+import LoginView from '@/views/LoginView.vue'
+import RegisterView from '@/views/RegisterView.vue'
 
 const routes = [
   {
@@ -34,6 +36,16 @@ const routes = [
     path: '/admin-dashboard',
     name: 'admin-dashboard',
     component: AdminDashboard // Associez le composant AdminDashboard
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: LoginView
+  },
+  {
+    path: '/register',
+    name: 'register',
+    component: RegisterView
   }
 ]
 

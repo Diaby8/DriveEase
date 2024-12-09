@@ -3,10 +3,13 @@ const cors = require('cors')
 const db = require('./db') // Connexion à la base de données
 const authRoutes = require('./auth') // Routes d'authentification
 const searchRoutes = require('./search') // Importez les routes de recherche
+const contractsRoutes = require('./contracts')
 
 const app = express()
 app.use(cors())
 app.use(express.json())
+app.use('/contracts', contractsRoutes)
+app.use('/api/auth', authRoutes)
 
 // Test de la connexion à la base de données
 db.connect((err) => {
