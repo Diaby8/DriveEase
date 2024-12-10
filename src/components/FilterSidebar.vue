@@ -62,6 +62,19 @@
         <option value="VOLKSWAGEN">Volkswagen</option>
       </select>
     </div>
+
+    <!-- Type of cars Filter -->
+    <div class="filter-group">
+      <label for="type_cars">Filter by Type_cars:</label>
+      <select id="type_cars" v-model="localSelectedTypeCars" @change="updateTypeCars">
+        <option value="">All</option>
+        <option value="CITYCAR">citycar</option>
+        <option value="COMPACT">compact</option>
+        <option value="CROSSOVER">crossover</option>
+        <option value="MPV">mpv</option>
+        <option value="SUV">suv</option>
+      </select>
+    </div>
   </aside>
 </template>
 
@@ -85,6 +98,10 @@ export default {
       type: String,
       default: ''
     },
+    selectedTypeCars: {
+      type: String,
+      default: ''
+    },
     selectedBrand: {
       type: String,
       default: ''
@@ -96,7 +113,9 @@ export default {
       localMaxPrice: this.maxPrice,
       localSelectedTransmission: this.selectedTransmission,
       localSelectedMotorisation: this.selectedMotorisation,
-      localSelectedBrand: this.selectedBrand
+      localSelectedBrand: this.selectedBrand,
+      localSelectedTypeCars: this.selectedTypeCars
+
     }
   },
   methods: {
@@ -111,6 +130,9 @@ export default {
     },
     updateMotorisation () {
       this.$emit('update:selectedMotorisation', this.localSelectedMotorisation)
+    },
+    updateTypeCars () {
+      this.$emit('update:selectedTypeCars', this.localSelectedTypeCars)
     },
     updateBrand () {
       this.$emit('update:selectedBrand', this.localSelectedBrand)

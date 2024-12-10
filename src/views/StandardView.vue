@@ -20,11 +20,13 @@
         :selectedTransmission="selectedTransmission"
         :selectedMotorisation="selectedMotorisation"
         :selectedBrand="selectedBrand"
+        :selectedTypeCars="selectedTypeCars"
         @update:selectedLocation="updateSelectedLocation"
         @update:maxPrice="updateMaxPrice"
         @update:selectedTransmission="updateSelectedTransmission"
         @update:selectedMotorisation="updateSelectedMotorisation"
         @update:selectedBrand="updateSelectedBrand"
+        @update:selectedTypeCars="updateSelectedTypeCars"
       />
 
       <!-- Liste des voitures -->
@@ -42,6 +44,7 @@
               <p>Transmission: {{ car.TRANSMISSION }}</p>
               <p>Price: ${{ car.PRICE_DAY }} / day</p>
               <p>Location: {{ getLocationName(car.CURRENT_LOCATION) }}</p>
+              <p>TypeCars: {{ car.TYPE_CARS }}</p>
               <!-- Bouton Rent -->
               <button class="rent-button">Rent</button>
             </div>
@@ -67,7 +70,8 @@ export default {
       maxPrice: 0,
       selectedTransmission: '',
       selectedMotorisation: '',
-      selectedBrand: ''
+      selectedBrand: '',
+      selectedTypeCars: ''
     }
   },
   computed: {
@@ -88,7 +92,10 @@ export default {
         const matchesBrand =
           this.selectedBrand === '' || car.BRAND?.toUpperCase() === this.selectedBrand
 
-        return matchesLocation && matchesPrice && matchesTransmission && matchesMotorisation && matchesBrand
+        const matchesTypeCars =
+          this.selectedTypeCars === '' || car.TYPE_CARS?.toUpperCase() === this.selectedTypeCars
+
+        return matchesLocation && matchesPrice && matchesTransmission && matchesMotorisation && matchesBrand && matchesTypeCars
       })
     }
   },
@@ -107,6 +114,9 @@ export default {
     },
     updateSelectedBrand (newBrand) {
       this.selectedBrand = newBrand
+    },
+    updateSelectedTypeCars (newTypeCars) {
+      this.selectedTypeCars = newTypeCars
     },
     getLocationName (locationId) {
       const locations = {
