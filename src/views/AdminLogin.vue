@@ -64,7 +64,7 @@ export default {
     async login () {
       console.log('Données envoyées :', { email: this.email, password: this.password }) // Log avant envoi
       try {
-        const response = await axios.post('http://localhost:5000/api/auth/login', {
+        const response = await axios.post('http://localhost:5000/api/authAdmin/login', {
           email: this.email,
           password: this.password
         })

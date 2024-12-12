@@ -36,7 +36,7 @@ export default {
   methods: {
     handleRegister () {
       axios
-        .post('http://localhost:5000/api/auth/register', {
+        .post('http://localhost:5000/authUser/register', {
           email: this.email,
           firstName: this.firstName,
           lastName: this.lastName,

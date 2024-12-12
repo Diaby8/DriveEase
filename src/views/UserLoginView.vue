@@ -28,7 +28,7 @@ export default {
   methods: {
     handleLogin () {
       axios
-        .post('http://localhost:5000/api/auth/login', {
+        .post('http://localhost:5000/authUser/login', {
           email: this.email,
           password: this.password
         })
