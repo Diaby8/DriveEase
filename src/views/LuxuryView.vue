@@ -38,12 +38,21 @@
               <p>Price: ${{ car.PRICE_DAY }} / day</p>
               <p>Location: {{ getLocationName(car.CURRENT_LOCATION) }}</p>
               <!-- Bouton Rent -->
-              <button class="rent-button">Rent</button>
+              <button class="rent-button" @click="openReservationModal(car)">Rent</button>
             </div>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- Modal de réservation -->
+    <ReservationModal
+      v-if="showReservationModal"
+      :isVisible="showReservationModal"
+      :carDetails="selectedCar"
+      @close="closeReservationModal"
+      @submit="submitReservation"
+    />
   </section>
 </template>
 
@@ -51,15 +60,18 @@
 import axios from 'axios'
 import FilterSidebar from '@/components/FilterSidebar.vue'
 import AppHeader from '@/components/AppHeader.vue'
+import ReservationModal from '@/components/ReservationModal.vue'
 
 export default {
   name: 'LuxuryView',
-  components: { FilterSidebar, AppHeader },
+  components: { FilterSidebar, AppHeader, ReservationModal },
   data () {
     return {
       cars: [],
       selectedLocation: '',
-      maxPrice: 0
+      maxPrice: 0,
+      showReservationModal: false,
+      selectedCar: null
     }
   },
   computed: {
@@ -90,8 +102,32 @@ export default {
       }
       return locations[locationId] || 'Unknown'
     },
-    goHome () {
-      this.$router.push('/')
+    openReservationModal (car) {
+      const isLoggedIn = localStorage.getItem('userToken') // Vérifie si l'utilisateur est connecté.
+      if (!isLoggedIn) {
+        alert('You need to login to rent a car.')
+        this.$router.push('/login') // Redirige vers la page de connexion.
+      } else {
+        this.selectedCar = car
+        this.showReservationModal = true // Affiche le formulaire de réservation.
+      }
+    },
+    closeReservationModal () {
+      this.showReservationModal = false
+      this.selectedCar = null
+    },
+    submitReservation (formData) {
+      console.log('Reservation data to send:', formData)
+      axios
+        .post('http://localhost:5000/contracts', formData)
+        .then((response) => {
+          alert('Réservation effectuée avec succès')
+          this.closeReservationModal()
+        })
+        .catch((error) => {
+          console.error('Erreur lors de la réservation :', error)
+          alert('Une erreur est survenue lors de la réservation')
+        })
     }
   },
   mounted () {
@@ -99,7 +135,7 @@ export default {
     this.selectedLocation = location || ''
 
     axios
-      .get('http://localhost:5000/api/cars/luxury')
+      .get('http://localhost:5000/api/cars/luxury') // API spécifique aux voitures de luxe
       .then((response) => {
         this.cars = response.data
       })
@@ -196,7 +232,6 @@ export default {
   box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2);
 }
 
-/* Image et informations de la voiture */
 .car-content {
   display: flex;
   width: 100%;
@@ -229,7 +264,6 @@ export default {
   position: relative;
 }
 
-/* Bouton Rent */
 .rent-button {
   font-family: 'Oswald', sans-serif;
   font-size: 14px;
