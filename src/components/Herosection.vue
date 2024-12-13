@@ -8,9 +8,30 @@
       </video>
     </div>
 
-    <!-- Bouton en haut à droite -->
-    <div class="top-right-button">
+    <!-- Boutons en haut à droite -->
+    <div class="top-right-buttons">
       <button class="custom-button small" @click="scrollToCars">Available Cars</button>
+      <button
+        class="custom-button small"
+        v-if="!isLoggedIn"
+        @click="navigateTo('login')"
+      >
+        Login
+      </button>
+      <button
+        class="custom-button small"
+        v-if="isLoggedIn"
+        @click="logout"
+      >
+        Logout
+      </button>
+      <button
+        class="custom-button small"
+        v-if="isLoggedIn"
+        @click="navigateTo('dashboard')"
+      >
+        Dashboard
+      </button>
     </div>
 
     <!-- Contenu principal avec animation -->
@@ -28,7 +49,8 @@ export default {
   name: 'HeroSection',
   data () {
     return {
-      isVisible: false // Contrôle l'affichage progressif
+      isVisible: false, // Contrôle l'affichage progressif
+      isLoggedIn: !!localStorage.getItem('userToken') // Vérifie si l'utilisateur est connecté
     }
   },
   mounted () {
@@ -44,6 +66,15 @@ export default {
       if (carsSection) {
         carsSection.scrollIntoView({ behavior: 'smooth' })
       }
+    },
+    navigateTo (route) {
+      this.$router.push(`/${route}`) // Navigue vers la route spécifiée
+    },
+    logout () {
+      localStorage.removeItem('userToken') // Supprime le token utilisateur
+      alert('You have been logged out.')
+      this.isLoggedIn = false // Met à jour l'état de connexion
+      this.$router.go(0) // Recharge la page pour forcer le changement visuel
     }
   }
 }
@@ -135,11 +166,13 @@ export default {
   color: #ddd;
 }
 
-/* Bouton en haut à droite */
-.top-right-button {
+/* Boutons en haut à droite */
+.top-right-buttons {
   position: absolute;
   top: 20px;
   right: 20px;
+  display: flex;
+  gap: 15px;
   z-index: 2;
 }
 

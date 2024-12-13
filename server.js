@@ -3,6 +3,7 @@ const cors = require('cors')
 const db = require('./db') // Connexion à la base de données
 const authAdminRoutes = require('./authAdmin') // Routes d'authentification admin
 const authUserRoutes = require('./authUser') // Routes d'authentification utilisateur
+const contractRoutes = require('./contracts') // Importer les routes des contrats
 
 const app = express()
 app.use(cors())
@@ -11,6 +12,7 @@ app.use(express.json())
 // Routes d'authentification
 app.use('/api/authAdmin', authAdminRoutes)
 app.use('/authUser', authUserRoutes)
+app.use('/contracts', contractRoutes) // Ajouter les routes des contrats
 
 // Test de la connexion à la base de données
 db.connect((err) => {

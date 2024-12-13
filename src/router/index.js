@@ -6,6 +6,7 @@ import AdminLogin from '../views/AdminLogin.vue' // Vue pour la connexion admin
 import AdminDashboard from '../views/AdminDashboard.vue' // Importez le composant
 import UserLoginView from '@/views/UserLoginView.vue'
 import UserRegisterView from '@/views/UserRegisterView.vue'
+import UserDashboard from '@/views/UserDashboard.vue'
 
 const routes = [
   {
@@ -46,6 +47,12 @@ const routes = [
     path: '/register',
     name: 'register',
     component: UserRegisterView
+  },
+  {
+    path: '/dashboard',
+    name: 'dashboard',
+    component: UserDashboard,
+    meta: { requiresAuth: true }
   }
 ]
 

@@ -2,6 +2,7 @@ const express = require('express')
 const bcrypt = require('bcrypt')
 const router = express.Router()
 const db = require('./db')
+const jwt = require('jsonwebtoken')
 
 // Route d'inscription pour les utilisateurs
 router.post('/register', async (req, res) => {
@@ -57,6 +58,36 @@ router.post('/login', (req, res) => {
     }
 
     res.json({ success: true, message: 'Connexion réussie', user })
+  })
+})
+
+// Route pour récupérer les informations de l'utilisateur connecté
+router.get('/me', (req, res) => {
+  const authHeader = req.headers.authorization
+  const token = authHeader && authHeader.split(' ')[1]
+
+  if (!token) {
+    return res.status(401).json({ success: false, message: 'Accès non autorisé' })
+  }
+
+  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+    if (err) {
+      return res.status(403).json({ success: false, message: 'Token invalide' })
+    }
+
+    const query = 'SELECT * FROM clients WHERE EMAIL_CLIENT = ?'
+    db.query(query, [user.email], (err, results) => {
+      if (err) {
+        console.error('Erreur lors de la récupération des informations utilisateur :', err)
+        return res.status(500).json({ success: false, message: 'Erreur serveur' })
+      }
+
+      if (results.length === 0) {
+        return res.status(404).json({ success: false, message: 'Utilisateur non trouvé' })
+      }
+
+      res.json({ success: true, user: results[0] })
+    })
   })
 })
 
