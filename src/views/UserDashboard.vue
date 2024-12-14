@@ -1,12 +1,21 @@
 <template>
     <div class="dashboard-container">
-      <h1>Welcome, {{ userInfo.firstName }}</h1>
+      <!-- Informations utilisateur -->
+      <div class="user-info">
+        <h1>Welcome, {{ userInfo.FIRST_NAME_CLIENT }} {{ userInfo.LAST_NAME_CLIENT }}</h1>
+        <p><strong>Email:</strong> {{ userInfo.EMAIL_CLIENT }}</p>
+        <p><strong>Phone:</strong> {{ userInfo.PHONE_CLIENT }}</p>
+        <p><strong>Address:</strong> {{ userInfo.ADDRESS_CLIENT }}</p>
+      </div>
+
+      <!-- Réservations -->
       <h2>Your Reservations</h2>
       <ul v-if="reservations.length > 0">
-        <li v-for="reservation in reservations" :key="reservation.id">
-          <p>Car: {{ reservation.carName }}</p>
-          <p>Pick-up Date: {{ reservation.pickupDate }}</p>
-          <p>Return Date: {{ reservation.returnDate }}</p>
+        <li v-for="reservation in reservations" :key="reservation.ID_CONTRACT">
+          <p><strong>Car:</strong> {{ reservation.carBrand }} {{ reservation.carModel }}</p>
+          <p><strong>Pick-up Date:</strong> {{ reservation.PICKUP_DATE }}</p>
+          <p><strong>Return Date:</strong> {{ reservation.RETURN_DATE }}</p>
+          <p><strong>Total Price:</strong> {{ reservation.TOTAL_PRICE }}€</p>
         </li>
       </ul>
       <p v-else>No reservations found.</p>
@@ -20,8 +29,9 @@ export default {
   name: 'UserDashboard',
   data () {
     return {
-      userInfo: {},
-      reservations: []
+      userInfo: {}, // Informations utilisateur
+      reservations: [], // Liste des réservations
+      email: localStorage.getItem('userEmail') // Stocke l'email après connexion
     }
   },
   created () {
@@ -30,32 +40,25 @@ export default {
   },
   methods: {
     fetchUserInfo () {
-      const token = localStorage.getItem('userToken')
       axios
-        .get('http://localhost:5000/authUser/me', {
-          headers: { Authorization: `Bearer ${token}` }
-        })
+        .post('http://localhost:5000/authUser/me', { email: this.email })
         .then((response) => {
           this.userInfo = response.data.user
         })
         .catch((error) => {
-          console.error('Error fetching user info:', error)
-          alert('Failed to fetch user info. Redirecting to login.')
-          this.$router.push('/login') // Redirige vers la page de connexion si non autorisé
+          console.error('Erreur lors de la récupération des infos utilisateur :', error)
+          alert('Impossible de récupérer vos informations.')
         })
     },
     fetchReservations () {
-      const token = localStorage.getItem('userToken')
       axios
-        .get('http://localhost:5000/contracts/user', {
-          headers: { Authorization: `Bearer ${token}` }
-        })
+        .post('http://localhost:5000/contracts/user', { email: this.email })
         .then((response) => {
           this.reservations = response.data.reservations
         })
         .catch((error) => {
-          console.error('Error fetching reservations:', error)
-          alert('Failed to fetch reservations.')
+          console.error('Erreur lors de la récupération des réservations :', error)
+          alert('Impossible de récupérer vos réservations.')
         })
     }
   }
@@ -70,11 +73,21 @@ export default {
     background: #f9f9f9;
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    color: #333;
   }
 
-  h1 {
+  .user-info {
+    margin-bottom: 30px;
+  }
+
+  .user-info h1 {
     font-size: 2rem;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
+  }
+
+  .user-info p {
+    margin: 5px 0;
+    color: #555; /* Texte légèrement plus clair */
   }
 
   h2 {
@@ -93,5 +106,10 @@ export default {
     padding: 15px;
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    color: #333;
+  }
+
+  li p {
+    margin: 5px 0;
   }
   </style>
