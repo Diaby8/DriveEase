@@ -1,4 +1,14 @@
 <template>
+  <div class="register-page">
+    <!-- Vidéo de fond -->
+    <div class="background-video">
+      <video autoplay muted loop playsinline>
+        <source src="@/assets/video2.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+    </div>
+
+    <!-- Formulaire d'inscription -->
     <div class="auth-container">
       <div class="auth-header">
         <h1>Register</h1>
@@ -17,7 +27,8 @@
         Already have an account? <router-link to="/login">Login here</router-link>
       </p>
     </div>
-  </template>
+  </div>
+</template>
 
 <script>
 import axios from 'axios'
@@ -50,7 +61,7 @@ export default {
         })
         .catch((error) => {
           const errorMessage =
-              error.response?.data?.message || 'Registration failed. Please try again.'
+            error.response?.data?.message || 'Registration failed. Please try again.'
           alert(errorMessage)
           console.error(error)
         })
@@ -59,69 +70,91 @@ export default {
 }
 </script>
 
-  <style scoped>
-  .auth-container {
-    background: rgba(0, 0, 0, 0.7);
-    color: white;
-    padding: 40px;
-    border-radius: 10px;
-    max-width: 400px;
-    margin: 100px auto;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-    text-align: center;
-  }
+<style scoped>
+/* Vidéo de fond */
+.background-video video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -1;
+}
 
-  .auth-header h1 {
-    font-size: 2.5rem;
-    margin-bottom: 10px;
-    font-family: 'Oswald', sans-serif;
-    text-transform: uppercase;
-  }
+/* Conteneur de la page */
+.register-page {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-  .auth-header p {
-    font-size: 1rem;
-    margin-bottom: 20px;
-  }
+/* Auth Container */
+.auth-container {
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 40px;
+  border-radius: 10px;
+  max-width: 400px;
+  margin: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  text-align: center;
+}
 
-  .auth-form input {
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-    border: none;
-    border-radius: 5px;
-    font-size: 1rem;
-  }
+/* Garde les styles existants */
+.auth-header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+  font-family: 'Oswald', sans-serif;
+  text-transform: uppercase;
+}
 
-  .auth-button {
-    width: 100%;
-    padding: 10px;
-    font-size: 1rem;
-    text-transform: uppercase;
-    font-family: 'Oswald', sans-serif;
-    background: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background 0.3s ease;
-  }
+.auth-header p {
+  font-size: 1rem;
+  margin-bottom: 20px;
+}
 
-  .auth-button:hover {
-    background: #0056b3;
-  }
+.auth-form input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+}
 
-  .auth-footer {
-    margin-top: 15px;
-    font-size: 0.9rem;
-  }
+.auth-button {
+  width: 100%;
+  padding: 10px;
+  font-size: 1rem;
+  text-transform: uppercase;
+  font-family: 'Oswald', sans-serif;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
 
-  .auth-footer a {
-    color: #007bff;
-    text-decoration: none;
-    font-weight: bold;
-  }
+.auth-button:hover {
+  background: #0056b3;
+}
 
-  .auth-footer a:hover {
-    text-decoration: underline;
-  }
-  </style>
+.auth-footer {
+  margin-top: 15px;
+  font-size: 0.9rem;
+}
+
+.auth-footer a {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.auth-footer a:hover {
+  text-decoration: underline;
+}
+</style>
