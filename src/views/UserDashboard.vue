@@ -43,7 +43,11 @@ export default {
       axios
         .post('http://localhost:5000/authUser/me', { email: this.email })
         .then((response) => {
-          this.userInfo = response.data.user
+          if (response.data.success) {
+            this.userInfo = response.data.user
+          } else {
+            alert(response.data.message)
+          }
         })
         .catch((error) => {
           console.error('Erreur lors de la récupération des infos utilisateur :', error)
@@ -87,7 +91,7 @@ export default {
 
   .user-info p {
     margin: 5px 0;
-    color: #555; /* Texte légèrement plus clair */
+    color: #555;
   }
 
   h2 {

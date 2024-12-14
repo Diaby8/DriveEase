@@ -2,7 +2,6 @@ const express = require('express')
 const bcrypt = require('bcrypt')
 const router = express.Router()
 const db = require('./db')
-const jwt = require('jsonwebtoken')
 
 // Route d'inscription pour les utilisateurs
 router.post('/register', async (req, res) => {
@@ -62,32 +61,30 @@ router.post('/login', (req, res) => {
 })
 
 // Route pour récupérer les informations de l'utilisateur connecté
-router.get('/me', (req, res) => {
-  const authHeader = req.headers.authorization
-  const token = authHeader && authHeader.split(' ')[1]
+router.post('/me', (req, res) => {
+  const { email } = req.body
 
-  if (!token) {
-    return res.status(401).json({ success: false, message: 'Accès non autorisé' })
+  if (!email) {
+    return res.status(400).json({ success: false, message: 'Email est requis.' })
   }
 
-  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+  const query = `
+    SELECT EMAIL_CLIENT, FIRST_NAME_CLIENT, LAST_NAME_CLIENT, PHONE_CLIENT, ADDRESS_CLIENT
+    FROM clients
+    WHERE EMAIL_CLIENT = ?
+  `
+
+  db.query(query, [email], (err, results) => {
     if (err) {
-      return res.status(403).json({ success: false, message: 'Token invalide' })
+      console.error('Erreur lors de la récupération des informations utilisateur :', err)
+      return res.status(500).json({ success: false, message: 'Erreur serveur.' })
     }
 
-    const query = 'SELECT * FROM clients WHERE EMAIL_CLIENT = ?'
-    db.query(query, [user.email], (err, results) => {
-      if (err) {
-        console.error('Erreur lors de la récupération des informations utilisateur :', err)
-        return res.status(500).json({ success: false, message: 'Erreur serveur' })
-      }
+    if (results.length === 0) {
+      return res.status(404).json({ success: false, message: 'Utilisateur non trouvé.' })
+    }
 
-      if (results.length === 0) {
-        return res.status(404).json({ success: false, message: 'Utilisateur non trouvé' })
-      }
-
-      res.json({ success: true, user: results[0] })
-    })
+    res.json({ success: true, user: results[0] })
   })
 })
 

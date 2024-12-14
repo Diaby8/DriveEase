@@ -1,6 +1,6 @@
-const express = require('express');
-const router = express.Router();
-const db = require('./db');
+const express = require('express')
+const router = express.Router()
+const db = require('./db')
 
 // Endpoint pour créer un nouveau contrat
 router.post('/', (req, res) => {
@@ -11,8 +11,8 @@ router.post('/', (req, res) => {
     returnDate,
     pickupAgencyId,
     returnAgencyId,
-    paymentDetails,
-  } = req.body;
+    paymentDetails
+  } = req.body
 
   // Vérification des champs
   if (
@@ -27,34 +27,34 @@ router.post('/', (req, res) => {
     !paymentDetails.expiryDate ||
     !paymentDetails.cvv
   ) {
-    console.error('Données manquantes :', req.body);
-    return res.status(400).send('Tous les champs sont requis.');
+    console.error('Données manquantes :', req.body)
+    return res.status(400).send('Tous les champs sont requis.')
   }
 
   const totalPriceQuery = `
     SELECT PRICE_DAY, DATEDIFF(?, ?) AS days
     FROM cars
     WHERE IMMATRICULATION = ?
-  `;
+  `
 
   db.query(totalPriceQuery, [returnDate, pickupDate, carImmatriculation], (err, results) => {
     if (err) {
-      console.error('Erreur lors du calcul du prix total:', err);
-      return res.status(500).send('Erreur interne lors du calcul du prix.');
+      console.error('Erreur lors du calcul du prix total:', err)
+      return res.status(500).send('Erreur interne lors du calcul du prix.')
     }
 
     if (results.length === 0) {
-      return res.status(404).send('Voiture introuvable.');
+      return res.status(404).send('Voiture introuvable.')
     }
 
-    const pricePerDay = results[0].PRICE_DAY;
-    const days = results[0].days;
+    const pricePerDay = results[0].PRICE_DAY
+    const days = results[0].days
 
     if (days <= 0) {
-      return res.status(400).send('Les dates de réservation sont invalides.');
+      return res.status(400).send('Les dates de réservation sont invalides.')
     }
 
-    const totalPrice = pricePerDay * days;
+    const totalPrice = pricePerDay * days
 
     const insertQuery = `
       INSERT INTO contracts (
@@ -66,7 +66,7 @@ router.post('/', (req, res) => {
         RETURN_DATE,
         TOTAL_PRICE
       ) VALUES (?, ?, ?, ?, ?, ?, ?)
-    `;
+    `
 
     db.query(
       insertQuery,
@@ -77,20 +77,20 @@ router.post('/', (req, res) => {
         returnAgencyId,
         pickupDate,
         returnDate,
-        totalPrice,
+        totalPrice
       ],
       (err) => {
         if (err) {
-          console.error('Erreur lors de la création du contrat:', err);
-          return res.status(500).send('Erreur interne lors de la création du contrat.');
+          console.error('Erreur lors de la création du contrat:', err)
+          return res.status(500).send('Erreur interne lors de la création du contrat.')
         }
 
-        console.log('Réservation réussie pour:', clientEmail);
-        res.status(201).send('Réservation créée avec succès.');
+        console.log('Réservation réussie pour:', clientEmail)
+        res.status(201).send('Réservation créée avec succès.')
       }
-    );
-  });
-});
+    )
+  })
+})
 
 // Route pour récupérer toutes les réservations
 router.get('/all', (req, res) => {
@@ -114,24 +114,24 @@ router.get('/all', (req, res) => {
     JOIN clients ON contracts.CLIENT_EMAIL = clients.EMAIL_CLIENT
     JOIN agencies AS pickupAgency ON contracts.PICKUP_AGENCY_ID = pickupAgency.ID_AGENCY
     JOIN agencies AS returnAgency ON contracts.RETURN_AGENCY_ID = returnAgency.ID_AGENCY
-  `;
+  `
 
   db.query(query, (err, results) => {
     if (err) {
-      console.error('Erreur lors de la récupération des réservations :', err);
-      return res.status(500).json({ success: false, message: 'Erreur serveur.' });
+      console.error('Erreur lors de la récupération des réservations :', err)
+      return res.status(500).json({ success: false, message: 'Erreur serveur.' })
     }
 
-    res.json({ success: true, reservations: results });
-  });
-});
+    res.json({ success: true, reservations: results })
+  })
+})
 
 // Route pour récupérer les réservations d'un utilisateur
 router.post('/user', (req, res) => {
-  const { email } = req.body;
+  const { email } = req.body
 
   if (!email) {
-    return res.status(400).json({ success: false, message: 'Email est requis.' });
+    return res.status(400).json({ success: false, message: 'Email est requis.' })
   }
 
   const query = `
@@ -139,16 +139,16 @@ router.post('/user', (req, res) => {
     FROM contracts
     JOIN cars ON contracts.CAR_IMMATRICULATION = cars.IMMATRICULATION
     WHERE contracts.CLIENT_EMAIL = ?
-  `;
+  `
 
   db.query(query, [email], (err, results) => {
     if (err) {
-      console.error('Erreur lors de la récupération des réservations :', err);
-      return res.status(500).json({ success: false, message: 'Erreur serveur.' });
+      console.error('Erreur lors de la récupération des réservations :', err)
+      return res.status(500).json({ success: false, message: 'Erreur serveur.' })
     }
 
-    res.json({ success: true, reservations: results });
-  });
-});
+    res.json({ success: true, reservations: results })
+  })
+})
 
-module.exports = router;
+module.exports = router
