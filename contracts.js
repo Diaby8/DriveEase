@@ -183,5 +183,24 @@ router.post('/user', (req, res) => {
     res.json({ success: true, reservations: results })
   })
 })
+// Route pour annuler une réservation
+router.delete('/:id', (req, res) => {
+  const { id } = req.params
+  const deleteQuery = `
+    DELETE FROM contracts WHERE ID_CONTRACT = ?
+  `
 
+  db.query(deleteQuery, [id], (err, results) => {
+    if (err) {
+      console.error('Erreur lors de l\'annulation de la réservation :', err)
+      return res.status(500).json({ success: false, message: 'Erreur serveur lors de l\'annulation.' })
+    }
+
+    if (results.affectedRows === 0) {
+      return res.status(404).json({ success: false, message: 'Réservation non trouvée.' })
+    }
+
+    res.json({ success: true, message: 'Réservation annulée avec succès.' })
+  })
+})
 module.exports = router

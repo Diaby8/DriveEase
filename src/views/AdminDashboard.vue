@@ -12,6 +12,7 @@
           <th>Pick-up Date</th>
           <th>Return Date</th>
           <th>Total Price</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -23,6 +24,14 @@
           <td>{{ formatDate(reservation.PICKUP_DATE) }}</td>
           <td>{{ formatDate(reservation.RETURN_DATE) }}</td>
           <td>{{ reservation.TOTAL_PRICE }}€</td>
+          <td>
+            <button
+              class="action-button cancel"
+              @click="cancelReservation(reservation.ID_CONTRACT)"
+            >
+              Cancel
+            </button>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -55,15 +64,33 @@ export default {
           alert('Impossible de récupérer les réservations.')
         })
     },
+    cancelReservation (reservationId) {
+      if (confirm('Are you sure you want to cancel this reservation?')) {
+        axios
+          .delete(`http://localhost:5000/contracts/${reservationId}`)
+          .then(() => {
+            alert('Reservation canceled successfully.')
+            // Mise à jour locale de la liste des réservations
+            this.reservations = this.reservations.filter(
+              (reservation) => reservation.ID_CONTRACT !== reservationId
+            )
+          })
+          .catch((error) => {
+            console.error('Erreur lors de l\'annulation de la réservation :', error)
+            alert('Unable to cancel the reservation.')
+          })
+      }
+    },
     formatDate (dateString) {
-      // Convertit une date au format ISO en "YYYY-MM-DD"
-      return new Date(dateString).toISOString().split('T')[0]
+      const options = { year: 'numeric', month: 'long', day: 'numeric' }
+      return new Date(dateString).toLocaleDateString(undefined, options)
     }
   }
 }
 </script>
 
 <style scoped>
+/* Conteneur principal */
 .admin-dashboard-container {
   max-width: 1000px;
   margin: 50px auto;
@@ -74,20 +101,21 @@ export default {
   color: white; /* Texte en blanc */
 }
 
+/* Titre principal */
 h1 {
   text-align: center;
   font-size: 2.5rem;
   margin-bottom: 20px;
-  color: white; /* Titre principal en blanc */
 }
 
+/* Sous-titre */
 h2 {
   text-align: center;
   font-size: 1.8rem;
   margin-bottom: 20px;
-  color: white; /* Sous-titre en blanc */
 }
 
+/* Table des réservations */
 .reservations-table {
   width: 100%;
   border-collapse: collapse;
@@ -118,6 +146,26 @@ h2 {
   color: white; /* Texte des cellules en blanc */
 }
 
+/* Boutons d'action */
+.action-button {
+  padding: 5px 10px;
+  font-size: 0.9rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.action-button.cancel {
+  background-color: #ff4d4d;
+  color: white;
+}
+
+.action-button.cancel:hover {
+  background-color: #e60000;
+}
+
+/* Message quand aucune réservation n'est trouvée */
 .no-data {
   text-align: center;
   font-size: 1.2rem;
