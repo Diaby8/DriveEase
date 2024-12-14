@@ -10,11 +10,11 @@
           </div>
           <div>
             <label for="pickupDate">Pickup Date</label>
-            <input type="date" id="pickupDate" v-model="formData.pickupDate" required />
+            <input type="date" id="pickupDate" v-model="formData.pickupDate" required @change="checkAvailability" />
           </div>
           <div>
             <label for="returnDate">Return Date</label>
-            <input type="date" id="returnDate" v-model="formData.returnDate" required />
+            <input type="date" id="returnDate" v-model="formData.returnDate" required @change="checkAvailability" />
           </div>
           <div>
             <label for="pickupAgencyId">Pickup Location</label>
@@ -60,6 +60,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   props: {
     isVisible: Boolean,
@@ -68,7 +70,7 @@ export default {
   data () {
     return {
       formData: {
-        clientEmail: localStorage.getItem('userEmail'), // Récupère l'email stocké
+        clientEmail: localStorage.getItem('userEmail'),
         carImmatriculation: '',
         pickupDate: '',
         returnDate: '',
@@ -88,7 +90,6 @@ export default {
       immediate: true,
       handler (newDetails) {
         if (newDetails) {
-          console.log('Car details updated in modal:', newDetails)
           this.formData.carImmatriculation = newDetails.IMMATRICULATION || ''
         }
       }
@@ -98,22 +99,28 @@ export default {
     closeModal () {
       this.$emit('close')
     },
-    submitReservation () {
-      if (
-        !this.formData.pickupDate ||
-        !this.formData.returnDate ||
-        !this.formData.pickupAgencyId ||
-        !this.formData.returnAgencyId ||
-        !this.formData.paymentDetails.cardNumber ||
-        !this.formData.paymentDetails.expiryDate ||
-        !this.formData.paymentDetails.cvv
-      ) {
-        this.message = 'Please fill out all fields!'
+    checkAvailability () {
+      if (!this.formData.carImmatriculation || !this.formData.pickupDate || !this.formData.returnDate) {
+        this.message = 'Veuillez sélectionner une voiture et des dates.'
         return
       }
 
+      axios
+        .post('http://localhost:5000/contracts/check-availability', {
+          carImmatriculation: this.formData.carImmatriculation,
+          pickupDate: this.formData.pickupDate,
+          returnDate: this.formData.returnDate
+        })
+        .then((response) => {
+          this.message = response.data.message
+        })
+        .catch((error) => {
+          console.error('Erreur lors de la vérification de disponibilité :', error)
+          this.message = 'Erreur lors de la vérification de la disponibilité.'
+        })
+    },
+    submitReservation () {
       this.$emit('submit', this.formData)
-      this.message = 'Submitting reservation...'
     }
   }
 }
