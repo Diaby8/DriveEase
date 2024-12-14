@@ -2,34 +2,58 @@
   <div v-if="isVisible" class="modal-overlay">
     <div class="modal">
       <h2>Reservation Form</h2>
-      <form @submit.prevent="submitReservation">
-        <div>
-          <label for="clientEmail">Email</label>
-          <input type="email" id="clientEmail" v-model="formData.clientEmail" required />
+      <form @submit.prevent="submitReservation" class="form-container">
+        <div class="column">
+          <div>
+            <label for="carImmatriculation">Car</label>
+            <input type="text" id="carImmatriculation" v-model="formData.carImmatriculation" readonly />
+          </div>
+          <div>
+            <label for="pickupDate">Pickup Date</label>
+            <input type="date" id="pickupDate" v-model="formData.pickupDate" required />
+          </div>
+          <div>
+            <label for="returnDate">Return Date</label>
+            <input type="date" id="returnDate" v-model="formData.returnDate" required />
+          </div>
+          <div>
+            <label for="pickupAgencyId">Pickup Location</label>
+            <select id="pickupAgencyId" v-model="formData.pickupAgencyId" required>
+              <option disabled value="">Select a location</option>
+              <option value="1">Paris</option>
+              <option value="2">Lyon</option>
+              <option value="3">Marseille</option>
+            </select>
+          </div>
+          <div>
+            <label for="returnAgencyId">Return Location</label>
+            <select id="returnAgencyId" v-model="formData.returnAgencyId" required>
+              <option disabled value="">Select a location</option>
+              <option value="1">Paris</option>
+              <option value="2">Lyon</option>
+              <option value="3">Marseille</option>
+            </select>
+          </div>
         </div>
-        <div>
-          <label for="carImmatriculation">Car</label>
-          <input type="text" id="carImmatriculation" v-model="formData.carImmatriculation" readonly />
+        <div class="column">
+          <div>
+            <label for="cardNumber">Card Number</label>
+            <input type="text" id="cardNumber" v-model="formData.paymentDetails.cardNumber" required />
+          </div>
+          <div>
+            <label for="expiryDate">Expiry Date</label>
+            <input type="month" id="expiryDate" v-model="formData.paymentDetails.expiryDate" required />
+          </div>
+          <div>
+            <label for="cvv">CVV</label>
+            <input type="text" id="cvv" v-model="formData.paymentDetails.cvv" required />
+          </div>
         </div>
-        <div>
-          <label for="pickupDate">Pickup Date</label>
-          <input type="date" id="pickupDate" v-model="formData.pickupDate" required />
-        </div>
-        <div>
-          <label for="returnDate">Return Date</label>
-          <input type="date" id="returnDate" v-model="formData.returnDate" required />
-        </div>
-        <div>
-          <label for="pickupAgencyId">Pickup Agency</label>
-          <input type="number" id="pickupAgencyId" v-model="formData.pickupAgencyId" required />
-        </div>
-        <div>
-          <label for="returnAgencyId">Return Agency</label>
-          <input type="number" id="returnAgencyId" v-model="formData.returnAgencyId" required />
-        </div>
-        <button type="submit">Confirm Reservation</button>
-        <button type="button" @click="closeModal">Cancel</button>
       </form>
+      <div class="buttons">
+        <button @click="submitReservation" type="button">Confirm Reservation</button>
+        <button type="button" @click="closeModal">Cancel</button>
+      </div>
       <p v-if="message">{{ message }}</p>
     </div>
   </div>
@@ -44,12 +68,17 @@ export default {
   data () {
     return {
       formData: {
-        clientEmail: '',
+        clientEmail: localStorage.getItem('userEmail'), // Récupère l'email stocké
         carImmatriculation: '',
         pickupDate: '',
         returnDate: '',
-        pickupAgencyId: null,
-        returnAgencyId: null
+        pickupAgencyId: '',
+        returnAgencyId: '',
+        paymentDetails: {
+          cardNumber: '',
+          expiryDate: '',
+          cvv: ''
+        }
       },
       message: ''
     }
@@ -70,7 +99,21 @@ export default {
       this.$emit('close')
     },
     submitReservation () {
+      if (
+        !this.formData.pickupDate ||
+        !this.formData.returnDate ||
+        !this.formData.pickupAgencyId ||
+        !this.formData.returnAgencyId ||
+        !this.formData.paymentDetails.cardNumber ||
+        !this.formData.paymentDetails.expiryDate ||
+        !this.formData.paymentDetails.cvv
+      ) {
+        this.message = 'Please fill out all fields!'
+        return
+      }
+
       this.$emit('submit', this.formData)
+      this.message = 'Submitting reservation...'
     }
   }
 }
@@ -96,68 +139,67 @@ export default {
   background: #ffffff;
   padding: 30px;
   border-radius: 12px;
-  width: 400px;
+  width: 800px;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-  text-align: center;
   font-family: 'Oswald', sans-serif;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 /* Titre du modal */
 .modal h2 {
   font-size: 24px;
-  margin-bottom: 20px;
   color: #333;
   text-transform: uppercase;
-  letter-spacing: 2px;
+  text-align: center;
+}
+
+/* Conteneur du formulaire */
+.form-container {
+  display: flex;
+  gap: 20px;
+}
+
+/* Colonne gauche et droite */
+.column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
 /* Champs du formulaire */
-.modal form div {
-  margin-bottom: 15px;
-  text-align: left;
-}
-
 .modal label {
   font-size: 14px;
   color: #555;
-  display: block;
-  margin-bottom: 5px;
   text-transform: uppercase;
+  margin-bottom: 5px;
 }
 
-.modal input {
+.modal input,
+.modal select {
   width: 100%;
   padding: 10px;
   font-size: 14px;
   border: 1px solid #ddd;
   border-radius: 8px;
-  outline: none;
-  transition: border-color 0.3s ease;
-}
-
-.modal input:focus {
-  border-color: #007bff;
 }
 
 /* Boutons */
+.buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
 .modal button {
-  font-size: 14px;
+  font-size: 16px;
   padding: 10px 20px;
-  text-transform: uppercase;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  margin: 5px;
-}
-
-.modal button[type='submit'] {
-  background-color: #007bff;
-  color: white;
-}
-
-.modal button[type='submit']:hover {
-  background-color: #0056b3;
+  text-transform: uppercase;
 }
 
 .modal button[type='button'] {
@@ -172,6 +214,7 @@ export default {
 /* Message */
 .modal p {
   margin-top: 10px;
+  text-align: center;
   font-size: 14px;
   color: #007bff;
 }
@@ -181,6 +224,9 @@ export default {
   .modal {
     width: 90%;
     padding: 20px;
+  }
+  .form-container {
+    flex-direction: column;
   }
 }
 </style>

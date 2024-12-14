@@ -10,11 +10,25 @@ router.post('/', (req, res) => {
     pickupDate,
     returnDate,
     pickupAgencyId,
-    returnAgencyId
+    returnAgencyId,
+    paymentDetails,
   } = req.body;
 
-  if (!clientEmail || !carImmatriculation || !pickupDate || !returnDate || !pickupAgencyId || !returnAgencyId) {
-    return res.status(400).send('Tous les champs sont requis');
+  // Vérification des champs
+  if (
+    !clientEmail ||
+    !carImmatriculation ||
+    !pickupDate ||
+    !returnDate ||
+    !pickupAgencyId ||
+    !returnAgencyId ||
+    !paymentDetails ||
+    !paymentDetails.cardNumber ||
+    !paymentDetails.expiryDate ||
+    !paymentDetails.cvv
+  ) {
+    console.error('Données manquantes :', req.body);
+    return res.status(400).send('Tous les champs sont requis.');
   }
 
   const totalPriceQuery = `
@@ -26,18 +40,18 @@ router.post('/', (req, res) => {
   db.query(totalPriceQuery, [returnDate, pickupDate, carImmatriculation], (err, results) => {
     if (err) {
       console.error('Erreur lors du calcul du prix total:', err);
-      return res.status(500).send('Erreur interne lors du calcul du prix');
+      return res.status(500).send('Erreur interne lors du calcul du prix.');
     }
 
     if (results.length === 0) {
-      return res.status(404).send('Voiture introuvable');
+      return res.status(404).send('Voiture introuvable.');
     }
 
     const pricePerDay = results[0].PRICE_DAY;
     const days = results[0].days;
 
     if (days <= 0) {
-      return res.status(400).send('Les dates de réservation sont invalides');
+      return res.status(400).send('Les dates de réservation sont invalides.');
     }
 
     const totalPrice = pricePerDay * days;
@@ -63,21 +77,22 @@ router.post('/', (req, res) => {
         returnAgencyId,
         pickupDate,
         returnDate,
-        totalPrice
+        totalPrice,
       ],
       (err) => {
         if (err) {
           console.error('Erreur lors de la création du contrat:', err);
-          return res.status(500).send('Erreur interne lors de la création du contrat');
+          return res.status(500).send('Erreur interne lors de la création du contrat.');
         }
 
-        res.status(201).send('Réservation créée avec succès');
+        console.log('Réservation réussie pour:', clientEmail);
+        res.status(201).send('Réservation créée avec succès.');
       }
     );
   });
 });
 
-// Nouvelle route pour récupérer toutes les réservations avec infos des clients
+// Route pour récupérer toutes les réservations
 router.get('/all', (req, res) => {
   const query = `
     SELECT 
@@ -104,7 +119,7 @@ router.get('/all', (req, res) => {
   db.query(query, (err, results) => {
     if (err) {
       console.error('Erreur lors de la récupération des réservations :', err);
-      return res.status(500).json({ success: false, message: 'Erreur serveur' });
+      return res.status(500).json({ success: false, message: 'Erreur serveur.' });
     }
 
     res.json({ success: true, reservations: results });
@@ -116,7 +131,7 @@ router.post('/user', (req, res) => {
   const { email } = req.body;
 
   if (!email) {
-    return res.status(400).json({ success: false, message: 'Email est requis' });
+    return res.status(400).json({ success: false, message: 'Email est requis.' });
   }
 
   const query = `
@@ -129,7 +144,7 @@ router.post('/user', (req, res) => {
   db.query(query, [email], (err, results) => {
     if (err) {
       console.error('Erreur lors de la récupération des réservations :', err);
-      return res.status(500).json({ success: false, message: 'Erreur serveur' });
+      return res.status(500).json({ success: false, message: 'Erreur serveur.' });
     }
 
     res.json({ success: true, reservations: results });
