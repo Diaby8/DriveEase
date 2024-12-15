@@ -56,7 +56,7 @@ router.post('/login', (req, res) => {
       return res.status(401).json({ success: false, message: 'Mot de passe incorrect' })
     }
 
-    res.json({ success: true, message: 'Connexion réussie', user })
+    res.json({ success: true, message: 'Connexion réussie', email: user.EMAIL_CLIENT })
   })
 })
 
@@ -65,7 +65,7 @@ router.post('/me', (req, res) => {
   const { email } = req.body
 
   if (!email) {
-    return res.status(400).json({ success: false, message: 'Email est requis.' })
+    return res.status(400).json({ success: false, message: 'Email requis.' })
   }
 
   const query = `

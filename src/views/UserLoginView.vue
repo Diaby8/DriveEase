@@ -44,14 +44,17 @@ export default {
           password: this.password
         })
         .then((response) => {
-          localStorage.setItem('userToken', response.data.token)
-          alert('Login successful!')
-          this.$router.push('/')
+          if (response.data.success) {
+            localStorage.setItem('userEmail', this.email)
+            alert('Login successful!')
+            this.$router.push('/dashboard')
+          } else {
+            alert(response.data.message)
+          }
         })
         .catch((error) => {
           const errorMessage =
-            error.response?.data?.message ||
-            'Login failed. Please check your credentials.'
+            error.response?.data?.message || 'Login failed. Please check your credentials.'
           alert(errorMessage)
           console.error(error)
         })

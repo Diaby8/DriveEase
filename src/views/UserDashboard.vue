@@ -1,65 +1,57 @@
 <template>
-    <div class="dashboard-container">
-      <!-- Header -->
-      <header class="site-header">
-        <h1>Car Rental Dashboard</h1>
-        <nav class="header-nav">
-          <button @click="navigateToHome">Home</button>
-          <button @click="logout">Logout</button>
-        </nav>
-      </header>
+  <div class="dashboard-container">
+    <!-- Header -->
+    <header class="site-header">
+      <h1>Car Rental Dashboard</h1>
+      <nav class="header-nav">
+        <button @click="navigateToHome">Home</button>
+        <button @click="logout">Logout</button>
+      </nav>
+    </header>
 
-      <!-- Main Content -->
-      <main class="dashboard-main">
-        <!-- Informations utilisateur -->
-        <section class="user-info">
-          <h2>User Information</h2>
-          <div class="info-grid">
-            <div>
-              <p><strong>Phone:</strong></p>
-              <p>{{ userInfo.PHONE_CLIENT }}</p>
-            </div>
-            <div>
-              <p><strong>Address:</strong></p>
-              <p>{{ userInfo.ADDRESS_CLIENT }}</p>
-            </div>
-          </div>
-        </section>
+    <!-- Informations utilisateur -->
+    <section class="user-info">
+      <h2>User Information</h2>
+      <p><strong>Email:</strong> {{ userInfo.EMAIL_CLIENT }}</p>
+      <p><strong>Phone:</strong> {{ userInfo.PHONE_CLIENT }}</p>
+      <p><strong>Address:</strong> {{ userInfo.ADDRESS_CLIENT }}</p>
+    </section>
 
-        <!-- Réservations -->
-        <section class="reservations">
-          <h2>Your Reservations</h2>
-          <ul v-if="reservations.length > 0" class="reservation-list">
-            <li v-for="reservation in reservations" :key="reservation.ID_CONTRACT" class="reservation-card">
-              <div class="reservation-details">
-                <p><strong>Car:</strong> {{ reservation.carBrand }} {{ reservation.carModel }}</p>
-                <p><strong>Pick-up Date:</strong> {{ formatDate(reservation.PICKUP_DATE) }}</p>
-                <p><strong>Return Date:</strong> {{ formatDate(reservation.RETURN_DATE) }}</p>
-                <p><strong>Total Price:</strong> {{ reservation.TOTAL_PRICE }}€</p>
-              </div>
-            </li>
-          </ul>
-          <p v-else class="no-reservations">You have no reservations at the moment.</p>
-        </section>
-      </main>
-    </div>
-  </template>
+    <!-- Réservations -->
+    <section class="reservations">
+      <h2>Your Reservations</h2>
+      <ul v-if="reservations.length > 0">
+        <li v-for="reservation in reservations" :key="reservation.ID_CONTRACT">
+          <p><strong>Car:</strong> {{ reservation.carBrand }} {{ reservation.carModel }}</p>
+          <p><strong>Pick-up Date:</strong> {{ formatDate(reservation.PICKUP_DATE) }}</p>
+          <p><strong>Return Date:</strong> {{ formatDate(reservation.RETURN_DATE) }}</p>
+          <p><strong>Total Price:</strong> {{ reservation.TOTAL_PRICE }}€</p>
+        </li>
+      </ul>
+      <p v-else>No reservations found.</p>
+    </section>
+  </div>
+</template>
 
 <script>
 import axios from 'axios'
 
 export default {
-  name: 'UserDashboard',
   data () {
     return {
-      userInfo: {}, // Informations utilisateur
-      reservations: [], // Liste des réservations
-      email: localStorage.getItem('userEmail') // Email stocké après connexion
+      userInfo: {},
+      reservations: [],
+      email: localStorage.getItem('userEmail')
     }
   },
   created () {
-    this.fetchUserInfo()
-    this.fetchReservations()
+    if (!this.email) {
+      alert('You are not logged in. Redirecting to login.')
+      this.$router.push('/login')
+    } else {
+      this.fetchUserInfo()
+      this.fetchReservations()
+    }
   },
   methods: {
     fetchUserInfo () {
@@ -73,7 +65,7 @@ export default {
           }
         })
         .catch((error) => {
-          console.error('Erreur lors de la récupération des infos utilisateur :', error)
+          console.error('Error fetching user information:', error)
           alert('Unable to retrieve user information.')
         })
     },
@@ -84,20 +76,18 @@ export default {
           this.reservations = response.data.reservations
         })
         .catch((error) => {
-          console.error('Erreur lors de la récupération des réservations :', error)
-          alert('Unable to retrieve your reservations.')
+          console.error('Error fetching reservations:', error)
+          alert('Unable to retrieve reservations.')
         })
     },
     formatDate (dateString) {
-      const options = { year: 'numeric', month: 'long', day: 'numeric' }
-      return new Date(dateString).toLocaleDateString(undefined, options)
+      return new Date(dateString).toLocaleDateString()
     },
     navigateToHome () {
       this.$router.push('/')
     },
     logout () {
       localStorage.removeItem('userEmail')
-      localStorage.removeItem('userToken')
       alert('You have been logged out.')
       this.$router.push('/login')
     }
@@ -106,14 +96,29 @@ export default {
 </script>
 
   <style scoped>
+  /* Background Video */
+  .background-video {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+  }
+
+  .background-video video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
   /* Global Container */
   .dashboard-container {
     max-width: 1000px;
     margin: 50px auto;
     padding: 20px;
-    background-color: #f4f4f4;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    color: white;
     font-family: "Oswald", sans-serif;
   }
 
@@ -122,7 +127,7 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #333;
+    background-color: rgba(51, 51, 51, 0.8);
     padding: 15px 20px;
     color: white;
     border-radius: 8px;
@@ -163,7 +168,7 @@ export default {
 
   /* User Information Section */
   .user-info {
-    background-color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.9);
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -195,7 +200,7 @@ export default {
 
   /* Reservations Section */
   .reservations {
-    background-color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.9);
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
