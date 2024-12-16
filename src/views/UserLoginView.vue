@@ -45,9 +45,9 @@ export default {
         })
         .then((response) => {
           if (response.data.success) {
-            localStorage.setItem('userEmail', this.email)
-            alert('Login successful!')
-            this.$router.push('/dashboard')
+            localStorage.setItem('userToken', response.data.token) // Stocke le token
+            localStorage.setItem('userEmail', this.email) // Stocke l'email
+            this.$router.push('/') // Redirige vers l'accueil
           } else {
             alert(response.data.message)
           }
@@ -96,7 +96,7 @@ export default {
   text-align: center;
 }
 
-/* Garde le reste des styles */
+/* En-tête */
 .auth-header h1 {
   font-size: 2.5rem;
   margin-bottom: 20px;
@@ -109,6 +109,7 @@ export default {
   margin-bottom: 20px;
 }
 
+/* Champs de formulaire */
 .auth-form input {
   width: 100%;
   padding: 15px;
@@ -119,6 +120,7 @@ export default {
   font-family: 'Oswald', sans-serif;
 }
 
+/* Bouton de connexion */
 .auth-button {
   width: 100%;
   padding: 12px;
@@ -137,6 +139,7 @@ export default {
   background: #0056b3;
 }
 
+/* Pied de page */
 .auth-footer {
   margin-top: 15px;
   font-size: 0.9rem;
