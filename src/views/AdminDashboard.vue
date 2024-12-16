@@ -1,5 +1,14 @@
 <template>
   <div class="admin-dashboard-container">
+    <!-- Background Video -->
+    <div class="background-video">
+      <video autoplay muted loop playsinline>
+        <source src="@/assets/video2.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+    </div>
+
+    <!-- Contenu principal -->
     <h1>Admin Dashboard</h1>
     <h2>Reservations List</h2>
     <table class="reservations-table">
@@ -70,7 +79,6 @@ export default {
           .delete(`http://localhost:5000/contracts/${reservationId}`)
           .then(() => {
             alert('Reservation canceled successfully.')
-            // Mise à jour locale de la liste des réservations
             this.reservations = this.reservations.filter(
               (reservation) => reservation.ID_CONTRACT !== reservationId
             )
@@ -90,15 +98,33 @@ export default {
 </script>
 
 <style scoped>
+/* Background Video */
+.background-video {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.background-video video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 /* Conteneur principal */
 .admin-dashboard-container {
   max-width: 1000px;
   margin: 50px auto;
   padding: 20px;
-  background: #333; /* Fond sombre */
+  background: rgba(0, 0, 0, 0.8); /* Fond semi-transparent */
   border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  color: white; /* Texte en blanc */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  color: white;
+  font-family: "Oswald", sans-serif;
 }
 
 /* Titre principal */
@@ -124,26 +150,29 @@ h2 {
 
 .reservations-table th,
 .reservations-table td {
-  border: 1px solid #ddd;
-  padding: 8px;
+  border: 1px solid #555;
+  padding: 10px;
   text-align: center;
 }
 
 .reservations-table th {
-  background-color: #555; /* Fond des en-têtes */
-  color: white; /* Texte des en-têtes en blanc */
+  background-color: #007bff;
+  color: white;
+  font-size: 1rem;
+  text-transform: uppercase;
 }
 
 .reservations-table tr:nth-child(even) {
-  background-color: #444; /* Alternance des lignes */
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .reservations-table tr:hover {
-  background-color: #555; /* Survol des lignes */
+  background-color: rgba(255, 255, 255, 0.2);
 }
 
 .reservations-table td {
-  color: white; /* Texte des cellules en blanc */
+  color: white;
+  font-size: 1rem;
 }
 
 /* Boutons d'action */
@@ -170,6 +199,6 @@ h2 {
   text-align: center;
   font-size: 1.2rem;
   margin-top: 20px;
-  color: #ccc; /* Texte pour les messages d'absence de données */
+  color: #ccc;
 }
 </style>

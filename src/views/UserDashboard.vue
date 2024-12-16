@@ -1,5 +1,13 @@
 <template>
   <div class="dashboard-container">
+    <!-- Background Video -->
+    <div class="background-video">
+      <video autoplay muted loop playsinline>
+        <source src="@/assets/video2.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+    </div>
+
     <!-- Header -->
     <header class="site-header">
       <h1>Car Rental Dashboard</h1>
@@ -20,15 +28,15 @@
     <!-- Réservations -->
     <section class="reservations">
       <h2>Your Reservations</h2>
-      <ul v-if="reservations.length > 0">
-        <li v-for="reservation in reservations" :key="reservation.ID_CONTRACT">
+      <ul v-if="reservations.length > 0" class="reservation-list">
+        <li v-for="reservation in reservations" :key="reservation.ID_CONTRACT" class="reservation-card">
           <p><strong>Car:</strong> {{ reservation.carBrand }} {{ reservation.carModel }}</p>
           <p><strong>Pick-up Date:</strong> {{ formatDate(reservation.PICKUP_DATE) }}</p>
           <p><strong>Return Date:</strong> {{ formatDate(reservation.RETURN_DATE) }}</p>
           <p><strong>Total Price:</strong> {{ reservation.TOTAL_PRICE }}€</p>
         </li>
       </ul>
-      <p v-else>No reservations found.</p>
+      <p v-else class="no-reservations">No reservations found.</p>
     </section>
   </div>
 </template>
@@ -95,152 +103,116 @@ export default {
 }
 </script>
 
-  <style scoped>
-  /* Background Video */
-  .background-video {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-    overflow: hidden;
-  }
+<style scoped>
+/* Background Video */
+.background-video {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  overflow: hidden;
+}
 
-  .background-video video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
+.background-video video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 
-  /* Global Container */
-  .dashboard-container {
-    max-width: 1000px;
-    margin: 50px auto;
-    padding: 20px;
-    color: white;
-    font-family: "Oswald", sans-serif;
-  }
+/* Global Container */
+.dashboard-container {
+  max-width: 1200px;
+  margin: 50px auto;
+  padding: 20px;
+  color: white;
+  font-family: "Oswald", sans-serif;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
 
-  /* Header */
-  .site-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: rgba(51, 51, 51, 0.8);
-    padding: 15px 20px;
-    color: white;
-    border-radius: 8px;
-    margin-bottom: 30px;
-  }
+/* Header */
+.site-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.8);
+  padding: 15px 30px;
+  border-radius: 10px;
+  margin-bottom: 40px;
+}
 
-  .site-header h1 {
-    font-size: 1.5rem;
-    margin: 0;
-  }
+.site-header h1 {
+  font-size: 2rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}
 
-  .header-nav {
-    display: flex;
-    gap: 15px;
-  }
+.header-nav button {
+  background: transparent;
+  border: 2px solid white;
+  color: white;
+  padding: 10px 20px;
+  margin: 0 5px;
+  font-size: 1rem;
+  text-transform: uppercase;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
 
-  .header-nav button {
-    padding: 8px 15px;
-    font-size: 0.9rem;
-    color: white;
-    background: #007bff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background 0.3s ease;
-  }
+.header-nav button:hover {
+  background: white;
+  color: black;
+}
 
-  .header-nav button:hover {
-    background: #0056b3;
-  }
+/* User Information Section */
+.user-info, .reservations {
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 20px 30px;
+  border-radius: 10px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
+}
 
-  /* Main Dashboard Content */
-  .dashboard-main {
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-  }
+.user-info h2, .reservations h2 {
+  font-size: 1.8rem;
+  color: #007bff;
+  text-transform: uppercase;
+  text-align: center;
+}
 
-  /* User Information Section */
-  .user-info {
-    background-color: rgba(255, 255, 255, 0.9);
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  }
+.user-info p, .reservations p {
+  font-size: 1rem;
+  margin: 10px 0;
+}
 
-  .user-info h2 {
-    font-size: 1.5rem;
-    color: #333;
-    margin-bottom: 15px;
-  }
+/* Reservations List */
+.reservation-list {
+  list-style: none;
+  padding: 0;
+}
 
-  .info-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-  }
+.reservation-card {
+  background-color: rgba(0, 0, 0, 0.8);
+  border: 2px solid #007bff;
+  padding: 15px 20px;
+  margin: 10px 0;
+  border-radius: 8px;
+  transition: transform 0.3s ease;
+  color: white;
+}
 
-  .info-grid div {
-    background-color: #f9f9f9;
-    padding: 10px 15px;
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  }
+.reservation-card:hover {
+  transform: scale(1.02);
+  border-color: #0056b3;
+}
 
-  .info-grid p {
-    margin: 0;
-    color: #555;
-  }
-
-  /* Reservations Section */
-  .reservations {
-    background-color: rgba(255, 255, 255, 0.9);
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  }
-
-  .reservations h2 {
-    font-size: 1.5rem;
-    color: #333;
-    margin-bottom: 15px;
-  }
-
-  .reservation-list {
-    list-style: none;
-    padding: 0;
-  }
-
-  .reservation-card {
-    background-color: #f9f9f9;
-    margin: 10px 0;
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-
-  .reservation-card:hover {
-    transform: scale(1.02);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  }
-
-  .reservation-card p {
-    margin: 5px 0;
-    color: #444;
-    font-size: 0.9rem;
-  }
-
-  .no-reservations {
-    font-size: 1rem;
-    color: #666;
-    text-align: center;
-    margin-top: 15px;
-  }
-  </style>
+.no-reservations {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #ddd;
+}
+</style>
