@@ -8,6 +8,11 @@
       </video>
     </div>
 
+    <!-- Logo en haut à gauche -->
+    <div class="top-left-logo">
+      <img src="@/assets/logoDE.png" alt="DriveEase Logo" class="logo-image" />
+    </div>
+
     <!-- Boutons en haut à droite -->
     <div class="top-right-buttons">
       <button class="custom-button small" @click="scrollToCars">Available Cars</button>
@@ -54,27 +59,25 @@ export default {
     }
   },
   mounted () {
-    // Affiche le contenu après un délai
     setTimeout(() => {
       this.isVisible = true
-    }, 500) // Délai de 500ms
+    }, 500)
   },
   methods: {
     scrollToCars () {
-      // Sélectionne la section avec l'ID "cars-section" et défile jusqu'à elle
       const carsSection = document.getElementById('cars-section')
       if (carsSection) {
         carsSection.scrollIntoView({ behavior: 'smooth' })
       }
     },
     navigateTo (route) {
-      this.$router.push(`/${route}`) // Navigue vers la route spécifiée
+      this.$router.push(`/${route}`)
     },
     logout () {
-      localStorage.removeItem('userToken') // Supprime le token utilisateur
+      localStorage.removeItem('userToken')
       alert('You have been logged out.')
-      this.isLoggedIn = false // Met à jour l'état de connexion
-      this.$router.go(0) // Recharge la page pour forcer le changement visuel
+      this.isLoggedIn = false
+      this.$router.go(0)
     }
   }
 }
@@ -103,11 +106,34 @@ export default {
   z-index: -1;
 }
 
+/* Logo en haut à gauche */
+.top-left-logo {
+  position: absolute;
+  top: -10px;
+  left: 20px;
+  z-index: 2;
+}
+
+.logo-image {
+  width: 150px; /* Taille agrandie du logo */
+  height: auto;
+}
+
+/* Boutons en haut à droite */
+.top-right-buttons {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  gap: 15px;
+  z-index: 2;
+}
+
 /* Contenu principal */
 .hero-content {
   z-index: 1;
-  margin: 0; /* Supprime tout espace inutile */
-  padding: 0; /* Supprime les padding inutiles */
+  margin: 0;
+  padding: 0;
 }
 
 /* Style du titre */
@@ -134,7 +160,6 @@ export default {
   transition: color 0.3s ease;
 }
 
-/* Traits pour les boutons */
 .custom-button::before,
 .custom-button::after {
   content: '';
@@ -156,24 +181,13 @@ export default {
   transform-origin: left;
 }
 
-/* Boutons avec traits visibles en permanence */
 .custom-button.permanent::before,
 .custom-button.permanent::after {
-  transform: scaleX(1); /* Traits visibles dès le départ */
+  transform: scaleX(1);
 }
 
 .custom-button:hover {
   color: #ddd;
-}
-
-/* Boutons en haut à droite */
-.top-right-buttons {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  display: flex;
-  gap: 15px;
-  z-index: 2;
 }
 
 .custom-button.small {
@@ -185,6 +199,7 @@ export default {
 .fade-slide-enter-active {
   transition: all 1s ease;
 }
+
 .fade-slide-enter-from {
   opacity: 0;
   transform: translateY(-20px);

@@ -6,18 +6,17 @@
         <h4>Navigation</h4>
         <ul>
           <li @click="navigateTo('/')">Home</li>
-          <li @click="navigateTo('/standard')">Available Cars</li>
-          <li @click="navigateTo('/about')">About Us</li>
+          <li @click="navigateTo('/')">Available Cars</li>
+          <li @click="navigateTo('/')">About Us</li>
         </ul>
       </div>
 
       <!-- Section 2: Services -->
       <div class="footer-column">
-        <h4>Our Services</h4>
+        <h4>Our Cars</h4>
         <ul>
-          <li>Car Rentals</li>
-          <li>Long-term Leasing</li>
-          <li>Luxury Cars</li>
+          <li @click="navigateTo('/luxury')">Sport Cars</li>
+          <li @click="navigateTo('/standard')">Standard Cars</li>
         </ul>
       </div>
 
