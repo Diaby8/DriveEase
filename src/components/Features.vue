@@ -1,7 +1,6 @@
 <template>
   <section class="features">
     <div class="container">
-      <h2>Why Choose Us?</h2>
       <div class="feature-list">
         <div class="feature">
           <h3>Affordable Prices</h3>

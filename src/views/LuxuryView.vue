@@ -3,6 +3,14 @@
     <!-- AppHeader -->
     <AppHeader />
 
+    <!-- Vidéo de fond -->
+    <div class="background-video">
+      <video autoplay muted loop playsinline>
+        <source src="@/assets/video3.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+    </div>
+
     <!-- Banner Section -->
     <div class="banner">
       <img class="banner-image" src="/images/cars/Audi_RS6_Black.jpg" alt="Luxury Cars Banner" />
@@ -147,6 +155,21 @@ export default {
 </script>
 
 <style scoped>
+/* Vidéo de fond */
+.background-video {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+.background-video video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 /* Layout entre la Sidebar et la liste des voitures */
 .layout {
   display: flex;
