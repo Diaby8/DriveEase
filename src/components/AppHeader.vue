@@ -1,5 +1,5 @@
 <template>
-  <header class="header">
+  <header :class="['header', { 'header-hidden': isHeaderHidden }]">
     <!-- Logo en haut à gauche -->
     <div class="logo">
       <img src="@/assets/logoDE.png" alt="DriveEase Logo" class="logo-image" />
@@ -37,6 +37,12 @@
 
 <script>
 export default {
+  data () {
+    return {
+      lastScrollPosition: 0,
+      isHeaderHidden: false
+    }
+  },
   computed: {
     isLoggedIn () {
       return !!localStorage.getItem('userToken') // Vérifie si l'utilisateur est connecté
@@ -50,7 +56,18 @@ export default {
       localStorage.removeItem('userToken') // Supprime le token utilisateur
       alert('You have been logged out.')
       this.$router.push('/') // Redirige vers la page d'accueil
+    },
+    handleScroll () {
+      const currentScroll = window.pageYOffset || document.documentElement.scrollTop
+      this.isHeaderHidden = currentScroll > this.lastScrollPosition && currentScroll > 50
+      this.lastScrollPosition = currentScroll <= 0 ? 0 : currentScroll
     }
+  },
+  mounted () {
+    window.addEventListener('scroll', this.handleScroll)
+  },
+  beforeUnmount () {
+    window.removeEventListener('scroll', this.handleScroll)
   }
 }
 </script>
@@ -68,6 +85,11 @@ export default {
   background: transparent; /* Fond transparent */
   color: white;
   z-index: 1000; /* Assure que le header est au-dessus du contenu */
+  transition: transform 0.3s ease-out; /* Animation fluide */
+}
+
+.header-hidden {
+  transform: translateY(-100%); /* Fait disparaître le header */
 }
 
 .logo {
