@@ -1,5 +1,5 @@
 <template>
-  <header class="header">
+  <header :class="['header', { 'header-hidden': isHidden }]">
     <div class="logo">
       <h1>DriveEase</h1>
     </div>
@@ -35,12 +35,37 @@
 
 <script>
 export default {
+  data () {
+    return {
+      lastScrollPosition: 0,
+      isHidden: false
+    }
+  },
   computed: {
     isLoggedIn () {
       return !!localStorage.getItem('userToken') // Vérifie si l'utilisateur est connecté
     }
   },
+  mounted () {
+    window.addEventListener('scroll', this.handleScroll)
+  },
+  beforeUnmount () {
+    window.removeEventListener('scroll', this.handleScroll)
+  },
   methods: {
+    handleScroll () {
+      const currentScroll = window.pageYOffset || document.documentElement.scrollTop
+
+      if (currentScroll > this.lastScrollPosition && currentScroll > 50) {
+        // Scroll vers le bas
+        this.isHidden = true
+      } else {
+        // Scroll vers le haut
+        this.isHidden = false
+      }
+
+      this.lastScrollPosition = currentScroll <= 0 ? 0 : currentScroll
+    },
     navigateTo (route) {
       this.$router.push(`/${route}`)
     },
@@ -66,6 +91,11 @@ export default {
   background: transparent; /* Fond transparent */
   color: white;
   z-index: 1000; /* Assure que le header est au-dessus du contenu */
+  transition: transform 0.3s ease-in-out; /* Animation fluide */
+}
+
+.header-hidden {
+  transform: translateY(-100%); /* Cache le header */
 }
 
 .logo h1 {

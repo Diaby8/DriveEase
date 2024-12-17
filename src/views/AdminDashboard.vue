@@ -180,7 +180,7 @@ export default {
       })
     },
     formatDate (dateString) {
-      return new Date(dateString).toLocaleString()
+      return new Date(dateString).toLocaleDateString()
     }
   }
 }
