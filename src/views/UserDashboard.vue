@@ -23,6 +23,15 @@
       <p><strong>Email:</strong> {{ userInfo.EMAIL_CLIENT }}</p>
       <p><strong>Phone:</strong> {{ userInfo.PHONE_CLIENT }}</p>
       <p><strong>Address:</strong> {{ userInfo.ADDRESS_CLIENT }}</p>
+
+      <!-- Formulaire pour mettre à jour les informations -->
+      <form @submit.prevent="updateUserInfo" class="update-form">
+        <label>Phone:</label>
+        <input v-model="updatedPhone" type="text" placeholder="New phone number" />
+        <label>Address:</label>
+        <input v-model="updatedAddress" type="text" placeholder="New address" />
+        <button type="submit" class="send-button">Update Info</button>
+      </form>
     </section>
 
     <!-- Réservations -->
@@ -38,6 +47,34 @@
       </ul>
       <p v-else class="no-reservations">No reservations found.</p>
     </section>
+
+    <!-- Messagerie -->
+    <section class="messages">
+      <h2>Send a Message to Admin</h2>
+      <form @submit.prevent="sendMessage" class="message-form">
+        <textarea
+          v-model="messageContent"
+          placeholder="Write your message here"
+          required
+          rows="5"
+        ></textarea>
+        <button type="submit" class="send-button">Send Message</button>
+      </form>
+
+      <!-- Messages reçus -->
+      <div v-if="messages.length > 0" class="received-messages">
+        <h3>Admin Replies</h3>
+        <ul>
+          <li v-for="message in messages" :key="message.sent_at">
+            <p>
+              <strong>Admin:</strong> {{ message.content }}<br />
+              <small>{{ formatDate(message.sent_at) }}</small>
+            </p>
+          </li>
+        </ul>
+      </div>
+      <p v-else class="no-messages">No replies received yet.</p>
+    </section>
   </div>
 </template>
 
@@ -49,6 +86,10 @@ export default {
     return {
       userInfo: {},
       reservations: [],
+      messages: [],
+      messageContent: '',
+      updatedPhone: '',
+      updatedAddress: '',
       email: localStorage.getItem('userEmail')
     }
   },
@@ -59,33 +100,52 @@ export default {
     } else {
       this.fetchUserInfo()
       this.fetchReservations()
+      this.fetchMessages()
     }
   },
   methods: {
     fetchUserInfo () {
-      axios
-        .post('http://localhost:5000/authUser/me', { email: this.email })
-        .then((response) => {
-          if (response.data.success) {
-            this.userInfo = response.data.user
-          } else {
-            alert(response.data.message)
-          }
-        })
-        .catch((error) => {
-          console.error('Error fetching user information:', error)
-          alert('Unable to retrieve user information.')
-        })
+      axios.post('http://localhost:5000/authUser/me', { email: this.email }).then((response) => {
+        this.userInfo = response.data.user
+      })
     },
     fetchReservations () {
-      axios
-        .post('http://localhost:5000/contracts/user', { email: this.email })
-        .then((response) => {
-          this.reservations = response.data.reservations
+      axios.post('http://localhost:5000/contracts/user', { email: this.email }).then((response) => {
+        this.reservations = response.data.reservations
+      })
+    },
+    fetchMessages () {
+      axios.get(`http://localhost:5000/api/users/messages?email=${this.email}`).then((response) => {
+        this.messages = response.data
+      })
+    },
+    sendMessage () {
+      axios.post('http://localhost:5000/api/users/messages/send', {
+        sender: this.email,
+        recipient: 'admin@driveease.com',
+        content: this.messageContent
+      })
+        .then(() => {
+          alert('Message sent successfully!')
+          this.messageContent = ''
+          this.fetchMessages()
         })
-        .catch((error) => {
-          console.error('Error fetching reservations:', error)
-          alert('Unable to retrieve reservations.')
+        .catch(() => {
+          alert('Unable to send message.')
+        })
+    },
+    updateUserInfo () {
+      axios.put('http://localhost:5000/api/users/update', {
+        EMAIL_CLIENT: this.email,
+        PHONE_CLIENT: this.updatedPhone,
+        ADDRESS_CLIENT: this.updatedAddress
+      })
+        .then(() => {
+          alert('Information updated successfully!')
+          this.fetchUserInfo()
+        })
+        .catch(() => {
+          alert('Unable to update information.')
         })
     },
     formatDate (dateString) {
@@ -112,12 +172,6 @@ export default {
   width: 100%;
   height: 100%;
   z-index: -1;
-  overflow: hidden;
-}
-
-.background-video video {
-  width: 100%;
-  height: 100%;
   object-fit: cover;
 }
 
@@ -133,86 +187,55 @@ export default {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
 }
 
-/* Header */
-.site-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: rgba(0, 0, 0, 0.8);
-  padding: 15px 30px;
-  border-radius: 10px;
-  margin-bottom: 40px;
-}
-
-.site-header h1 {
-  font-size: 2rem;
-  font-weight: bold;
-  text-transform: uppercase;
-}
-
-.header-nav button {
-  background: transparent;
-  border: 2px solid white;
-  color: white;
-  padding: 10px 20px;
-  margin: 0 5px;
-  font-size: 1rem;
-  text-transform: uppercase;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.header-nav button:hover {
-  background: white;
-  color: black;
-}
-
-/* User Information Section */
-.user-info, .reservations {
-  background-color: rgba(0, 0, 0, 0.7);
-  padding: 20px 30px;
-  border-radius: 10px;
-  margin-bottom: 30px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
-}
-
-.user-info h2, .reservations h2 {
-  font-size: 1.8rem;
-  color: #007bff;
-  text-transform: uppercase;
+h2 {
   text-align: center;
+  color: #007bff;
+  margin-bottom: 15px;
 }
 
-.user-info p, .reservations p {
-  font-size: 1rem;
+/* Update Form */
+.update-form input {
+  width: 100%;
+  padding: 10px;
   margin: 10px 0;
+  border-radius: 5px;
+  border: none;
 }
 
-/* Reservations List */
-.reservation-list {
+.send-button {
+  padding: 10px 15px;
+  background-color: #007bff;
+  border: none;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.send-button:hover {
+  background-color: #0056b3;
+}
+
+.reservation-card {
+  border: 2px solid #007bff;
+  padding: 15px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.received-messages ul {
   list-style: none;
   padding: 0;
 }
 
-.reservation-card {
-  background-color: rgba(0, 0, 0, 0.8);
-  border: 2px solid #007bff;
-  padding: 15px 20px;
-  margin: 10px 0;
-  border-radius: 8px;
-  transition: transform 0.3s ease;
-  color: white;
+.received-messages li {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
 }
 
-.reservation-card:hover {
-  transform: scale(1.02);
-  border-color: #0056b3;
-}
-
-.no-reservations {
+.no-messages {
   text-align: center;
-  font-size: 1.2rem;
   color: #ddd;
 }
 </style>

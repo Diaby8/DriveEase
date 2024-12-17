@@ -4,6 +4,7 @@ const db = require('./db') // Connexion à la base de données
 const authAdminRoutes = require('./authAdmin') // Routes d'authentification admin
 const authUserRoutes = require('./authUser') // Routes d'authentification utilisateur
 const contractRoutes = require('./contracts') // Importer les routes des contrats
+const userServiceRoutes = require('./userService') // Importer le fichier userService.js
 
 const app = express()
 app.use(cors())
@@ -13,6 +14,7 @@ app.use(express.json())
 app.use('/api/authAdmin', authAdminRoutes)
 app.use('/authUser', authUserRoutes)
 app.use('/contracts', contractRoutes) // Ajouter les routes des contrats
+app.use('/api/users', userServiceRoutes) // Utiliser les routes utilisateurs
 
 // Test de la connexion à la base de données
 db.connect((err) => {
